@@ -2,42 +2,246 @@
     ViewData["Title"] = "Accueil";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Bienvenue sur LogCentralPlatform</h1>
-    <p class="lead">Plateforme centralisée pour la gestion, l'analyse et la surveillance des logs d'applications</p>
+<div class="hero-section bg-light rounded p-5 mb-5 text-center">
+    <h1 class="display-4 mb-3 fw-bold text-primary">
+        <i class="bi bi-layers me-2"></i>LogCentralPlatform
+    </h1>
+    <p class="lead mb-4">Plateforme centralisée pour la gestion, l'analyse et la surveillance<br /> des logs d'applications et services Windows</p>
+    <div class="d-flex justify-content-center gap-3">
+        <a href="/Home/Dashboard" class="btn btn-primary btn-lg">
+            <i class="bi bi-speedometer2 me-1"></i> Tableau de bord
+        </a>
+        <a href="/Home/Logs" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-list-ul me-1"></i> Voir les logs
+        </a>
+    </div>
 </div>
 
-<div class="row mt-5">
+<div class="row mb-5">
     <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Collecte de logs</h5>
-            </div>
-            <div class="card-body">
-                <p>Centralisez tous vos logs d'applications et services via notre API REST sécurisée.</p>
-                <a href="/Services" class="btn btn-primary">Gérer les services</a>
+        <div class="card h-100 dashboard-widget">
+            <div class="card-body text-center p-5">
+                <div class="stat-icon text-primary mb-3">
+                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                </div>
+                <h3 class="card-title mb-3">Collecte Centralisée</h3>
+                <p class="card-text mb-4">Centralisez tous vos logs d'applications et services via notre API REST sécurisée. Attribuez un identifiant unique à chaque service pour une meilleure traçabilité.</p>
+                <a href="/Services" class="btn btn-outline-primary">
+                    <i class="bi bi-gear me-1"></i> Gérer les services
+                </a>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Analyse et monitoring</h5>
-            </div>
-            <div class="card-body">
-                <p>Visualisez, recherchez et analysez vos logs pour identifier rapidement les problèmes.</p>
-                <a href="/Logs" class="btn btn-primary">Consulter les logs</a>
+        <div class="card h-100 dashboard-widget">
+            <div class="card-body text-center p-5">
+                <div class="stat-icon text-info mb-3">
+                    <i class="bi bi-search"></i>
+                </div>
+                <h3 class="card-title mb-3">Analyse & Monitoring</h3>
+                <p class="card-text mb-4">Visualisez, recherchez et analysez vos logs pour identifier rapidement les problèmes. Suivez l'état de vos services en temps réel et recevez des alertes.</p>
+                <a href="/Home/Logs" class="btn btn-outline-info">
+                    <i class="bi bi-list-ul me-1"></i> Consulter les logs
+                </a>
             </div>
         </div>
     </div>
     <div class="col-md-4">
+        <div class="card h-100 dashboard-widget">
+            <div class="card-body text-center p-5">
+                <div class="stat-icon text-danger mb-3">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <h3 class="card-title mb-3">IA & Débogage</h3>
+                <p class="card-text mb-4">Bénéficiez de l'analyse IA pour détecter les anomalies et obtenir des recommandations de correction. Notre agent n8n vous aide à optimiser vos applications.</p>
+                <a href="/Home/Dashboard" class="btn btn-outline-danger">
+                    <i class="bi bi-speedometer2 me-1"></i> Tableau de bord
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-5">
+    <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Aperçu de l'activité récente</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="stat-value text-primary">2,845</div>
+                    <div class="stat-label">Logs collectés aujourd'hui</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="stat-value text-danger">37</div>
+                    <div class="stat-label">Erreurs détectées</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="stat-value text-success">98.7%</div>
+                    <div class="stat-label">Services actifs</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="stat-value text-info">24</div>
+                    <div class="stat-label">Applications monitorées</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Activité des dernières 24 heures</h6>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-secondary active">24h</button>
+                        <button type="button" class="btn btn-outline-secondary">7j</button>
+                        <button type="button" class="btn btn-outline-secondary">30j</button>
+                    </div>
+                </div>
+                <div class="border rounded p-3" style="height: 200px;">
+                    <div class="text-center h-100 d-flex align-items-center justify-content-center">
+                        <p class="text-muted mb-0">Graphique d'activité (placeholder)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h6 class="mb-3">Distribution des logs par niveau</h6>
+                <div class="border rounded p-3" style="height: 200px;">
+                    <div class="h-100">
+                        <div class="mb-2 d-flex justify-content-between">
+                            <div><span class="log-level log-level-info">Info</span></div>
+                            <div>65%</div>
+                        </div>
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        
+                        <div class="mb-2 d-flex justify-content-between">
+                            <div><span class="log-level log-level-warning">Warning</span></div>
+                            <div>20%</div>
+                        </div>
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        
+                        <div class="mb-2 d-flex justify-content-between">
+                            <div><span class="log-level log-level-error">Error</span></div>
+                            <div>12%</div>
+                        </div>
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 12%" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        
+                        <div class="mb-2 d-flex justify-content-between">
+                            <div><span class="log-level log-level-critical">Critical</span></div>
+                            <div>3%</div>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-dark" role="progressbar" style="width: 3%" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">IA et alertes</h5>
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertes récentes</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">Service d'authentification</h6>
+                        <small class="text-danger">Il y a 35 min</small>
+                    </div>
+                    <p class="mb-1">Plusieurs tentatives de connexion échouées détectées</p>
+                    <small>Service: AuthService v2.1.3</small>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">Base de données clients</h6>
+                        <small class="text-warning">Il y a 2 heures</small>
+                    </div>
+                    <p class="mb-1">Temps de réponse supérieur à 1500ms</p>
+                    <small>Service: CustomerDB v3.0.1</small>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">API paiements</h6>
+                        <small class="text-danger">Il y a 3 heures</small>
+                    </div>
+                    <p class="mb-1">Exception non gérée dans le traitement des transactions</p>
+                    <small>Service: PaymentAPI v1.5.0</small>
+                </a>
+            </div>
+            <div class="card-footer text-end">
+                <a href="#" class="btn btn-sm btn-outline-primary">Voir toutes les alertes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>Actions rapides</h5>
             </div>
             <div class="card-body">
-                <p>Bénéficiez de l'analyse IA et configurez des alertes pour être informé des problèmes.</p>
-                <a href="/Dashboard" class="btn btn-primary">Tableau de bord</a>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-grid">
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="bi bi-plus-circle me-1"></i> Ajouter un service
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-grid">
+                            <a href="#" class="btn btn-outline-secondary">
+                                <i class="bi bi-gear me-1"></i> Configurer alertes
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-grid">
+                            <a href="#" class="btn btn-outline-info">
+                                <i class="bi bi-graph-up me-1"></i> Rapports
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-grid">
+                            <a href="#" class="btn btn-outline-success">
+                                <i class="bi bi-check-circle me-1"></i> Vérifier état services
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Ressources</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="bi bi-book me-2"></i> Documentation de l'API
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="bi bi-code-slash me-2"></i> Exemples d'intégration
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="bi bi-question-circle me-2"></i> Centre d'aide
+                </a>
             </div>
         </div>
     </div>

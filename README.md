@@ -177,6 +177,40 @@ var response = await client.PostAsync("https://votre-instance/api/logs", content
 
 ## Résolution des problèmes courants
 
+### Nettoyage complet du projet
+
+Si vous rencontrez des problèmes de build persistants, nous fournissons des scripts pour nettoyer complètement le projet et reconstruire:
+
+**Windows**:
+```powershell
+.\clean_build.ps1
+```
+
+**Linux/macOS**:
+```bash
+chmod +x clean_build.sh
+./clean_build.sh
+```
+
+Ces scripts vont:
+1. Supprimer tous les dossiers `bin` et `obj`
+2. Vider le cache NuGet
+3. Restaurer tous les packages
+4. Reconstruire la solution
+
+### Problèmes avec les packages NuGet
+
+Si vous rencontrez des erreurs du type:
+```
+NETSDK1004 Le fichier de composants 'project.assets.json' est introuvable. Exécutez une restauration de package NuGet pour générer ce fichier.
+```
+
+Utilisez les commandes suivantes:
+```bash
+dotnet restore
+dotnet build /p:WarningLevel=0
+```
+
 ### Base de données
 
 #### Problèmes avec Entity Framework Core Migrations
@@ -203,12 +237,6 @@ Ces scripts généreront un fichier `database_creation_script.sql` que vous pour
 - **Erreur "Cannot open database"**: Assurez-vous que la base de données existe ou que l'utilisateur a les droits pour la créer
 
 ### Erreurs de compilation
-
-- **Métadonnées manquantes ou références introuvables**: 
-  ```bash
-  dotnet restore
-  dotnet build /p:WarningLevel=0
-  ```
 
 - **Erreurs d'ambiguïté de type (par exemple, `LogLevel`)**: Utilisez le nom complet du type, par exemple `LogCentralPlatform.Core.Entities.LogLevel`
 

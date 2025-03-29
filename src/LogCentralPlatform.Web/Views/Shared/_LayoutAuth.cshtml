@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LogCentralPlatform</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/LogCentralPlatform.Web.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+    </style>
+</head>
+<body>
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="auth-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <p>
+                        &copy; @DateTime.Now.Year - LogCentralPlatform
+                        <span class="mx-2">|</span>
+                        <a href="/Home/Privacy" class="text-muted">Confidentialité</a>
+                        <span class="mx-2">|</span>
+                        <a href="/Home/Contact" class="text-muted">Contact</a>
+                    </p>
+                    <p class="small text-muted mb-0">Plateforme centralisée pour la gestion, l'analyse et la surveillance des logs d'applications</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

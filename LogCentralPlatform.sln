@@ -1,0 +1,48 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E38127A5-5D1B-42B0-9F5B-52939318B3D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogCentralPlatform.Core", "src\LogCentralPlatform.Core\LogCentralPlatform.Core.csproj", "{C7F85E40-F0FA-4C93-A2E8-BA92BD9F8B50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogCentralPlatform.Infrastructure", "src\LogCentralPlatform.Infrastructure\LogCentralPlatform.Infrastructure.csproj", "{BF66A0D6-B748-447A-B37F-C01E88BA6BE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogCentralPlatform.Api", "src\LogCentralPlatform.Api\LogCentralPlatform.Api.csproj", "{AA10B284-0A38-4D48-90BD-A8A79CC6E36F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogCentralPlatform.Web", "src\LogCentralPlatform.Web\LogCentralPlatform.Web.csproj", "{F2EBBFBE-86F4-4BAD-87A1-3DA37C5B17CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7F85E40-F0FA-4C93-A2E8-BA92BD9F8B50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7F85E40-F0FA-4C93-A2E8-BA92BD9F8B50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7F85E40-F0FA-4C93-A2E8-BA92BD9F8B50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7F85E40-F0FA-4C93-A2E8-BA92BD9F8B50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF66A0D6-B748-447A-B37F-C01E88BA6BE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF66A0D6-B748-447A-B37F-C01E88BA6BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF66A0D6-B748-447A-B37F-C01E88BA6BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF66A0D6-B748-447A-B37F-C01E88BA6BE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA10B284-0A38-4D48-90BD-A8A79CC6E36F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA10B284-0A38-4D48-90BD-A8A79CC6E36F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA10B284-0A38-4D48-90BD-A8A79CC6E36F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA10B284-0A38-4D48-90BD-A8A79CC6E36F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2EBBFBE-86F4-4BAD-87A1-3DA37C5B17CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2EBBFBE-86F4-4BAD-87A1-3DA37C5B17CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2EBBFBE-86F4-4BAD-87A1-3DA37C5B17CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2EBBFBE-86F4-4BAD-87A1-3DA37C5B17CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C7F85E40-F0FA-4C93-A2E8-BA92BD9F8B50} = {E38127A5-5D1B-42B0-9F5B-52939318B3D3}
+		{BF66A0D6-B748-447A-B37F-C01E88BA6BE2} = {E38127A5-5D1B-42B0-9F5B-52939318B3D3}
+		{AA10B284-0A38-4D48-90BD-A8A79CC6E36F} = {E38127A5-5D1B-42B0-9F5B-52939318B3D3}
+		{F2EBBFBE-86F4-4BAD-87A1-3DA37C5B17CF} = {E38127A5-5D1B-42B0-9F5B-52939318B3D3}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="50" viewBox="0 0 200 50" fill="none">
+  <path d="M20 10H30V40H20V10Z" fill="#3B71CA"/>
+  <path d="M34 15H44V40H34V15Z" fill="#54B4D3"/>
+  <path d="M48 20H58V40H48V20Z" fill="#6C757D"/>
+  <path d="M62 25H72V40H62V25Z" fill="#3B71CA"/>
+  <path d="M76 15H86V40H76V15Z" fill="#F93154"/>
+  <path d="M90 10H100V40H90V10Z" fill="#3B71CA"/>
+  <text x="110" y="30" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#212529">LogCentralPlatform</text>
+</svg>

@@ -22,7 +22,7 @@ namespace LogCentralPlatform.Web.Models
         /// <summary>
         /// Niveau de gravité du log.
         /// </summary>
-        public LogLevel Level { get; set; }
+        public Core.Entities.LogLevel Level { get; set; }
 
         /// <summary>
         /// Message principal du log.
@@ -88,11 +88,11 @@ namespace LogCentralPlatform.Web.Models
             {
                 return Level switch
                 {
-                    LogLevel.Critical => "bg-danger text-white",
-                    LogLevel.Error => "bg-danger text-white",
-                    LogLevel.Warning => "bg-warning",
-                    LogLevel.Information => "bg-info",
-                    LogLevel.Debug => "bg-secondary text-white",
+                    Core.Entities.LogLevel.Critical => "bg-danger text-white",
+                    Core.Entities.LogLevel.Error => "bg-danger text-white",
+                    Core.Entities.LogLevel.Warning => "bg-warning",
+                    Core.Entities.LogLevel.Information => "bg-info",
+                    Core.Entities.LogLevel.Debug => "bg-secondary text-white",
                     _ => "bg-light"
                 };
             }
@@ -107,11 +107,11 @@ namespace LogCentralPlatform.Web.Models
             {
                 return Level switch
                 {
-                    LogLevel.Critical => "badge bg-danger",
-                    LogLevel.Error => "badge bg-danger",
-                    LogLevel.Warning => "badge bg-warning",
-                    LogLevel.Information => "badge bg-info",
-                    LogLevel.Debug => "badge bg-secondary",
+                    Core.Entities.LogLevel.Critical => "badge bg-danger",
+                    Core.Entities.LogLevel.Error => "badge bg-danger",
+                    Core.Entities.LogLevel.Warning => "badge bg-warning",
+                    Core.Entities.LogLevel.Information => "badge bg-info",
+                    Core.Entities.LogLevel.Debug => "badge bg-secondary",
                     _ => "badge bg-light"
                 };
             }
@@ -161,7 +161,7 @@ namespace LogCentralPlatform.Web.Models
         /// <summary>
         /// Filtre par niveau de log.
         /// </summary>
-        public LogLevel? LevelFilter { get; set; }
+        public Core.Entities.LogLevel? LevelFilter { get; set; }
 
         /// <summary>
         /// Filtre par service.

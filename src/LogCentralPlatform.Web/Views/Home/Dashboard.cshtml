@@ -1,0 +1,99 @@
+@{
+    ViewData["Title"] = "Tableau de bord";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h1>Tableau de bord</h1>
+        <p class="lead">Bienvenue sur votre tableau de bord LogCentralPlatform.</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card border-primary mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Résumé des logs</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Logs aujourd'hui</span>
+                    <span class="badge bg-primary">0</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Erreurs critiques</span>
+                    <span class="badge bg-danger">0</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Erreurs</span>
+                    <span class="badge bg-danger">0</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Avertissements</span>
+                    <span class="badge bg-warning">0</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="/Logs" class="btn btn-primary btn-sm">Voir les logs</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card border-success mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Services</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Services actifs</span>
+                    <span class="badge bg-success">0</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Services hors ligne</span>
+                    <span class="badge bg-danger">0</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Services avec alerte</span>
+                    <span class="badge bg-warning">0</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="/Services" class="btn btn-success btn-sm">Gérer les services</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card border-info mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Actions rapides</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="/Services/Create" class="list-group-item list-group-item-action">Ajouter un service</a>
+                    <a href="/Clients/Create" class="list-group-item list-group-item-action">Ajouter un client</a>
+                    <a href="/Reports/Generate" class="list-group-item list-group-item-action">Générer un rapport</a>
+                    <a href="/Services/Analyze" class="list-group-item list-group-item-action">Analyser les logs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Activité récente</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted text-center">Aucune activité récente à afficher.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Ici, vous pourriez ajouter des scripts pour des graphiques dynamiques, etc. -->
+}

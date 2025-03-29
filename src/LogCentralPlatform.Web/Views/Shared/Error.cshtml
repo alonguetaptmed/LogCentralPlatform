@@ -1,0 +1,26 @@
+@model LogCentralPlatform.Web.Models.ErrorViewModel
+@{
+    ViewData["Title"] = "Erreur";
+}
+
+<h1 class="text-danger">Erreur.</h1>
+<h2 class="text-danger">Une erreur s'est produite lors du traitement de votre demande.</h2>
+
+@if (Model?.ShowRequestId ?? false)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+<h3>Mode développement</h3>
+<p>
+    En modifiant l'environnement à <strong>Development</strong> dans le fichier <strong>appsettings.json</strong>, vous verrez des informations de débogage détaillées.
+</p>
+<p>
+    <strong>L'environnement de développement ne doit pas être activé pour les applications déployées.</strong>
+    Cela pourrait entraîner l'affichage d'informations sensibles auprès des utilisateurs finaux.
+    Pour le débogage local, définissez l'environnement sur <strong>Development</strong>
+    en définissant la variable d'environnement <strong>ASPNETCORE_ENVIRONMENT</strong> sur <strong>Development</strong>
+    et redémarrez l'application.
+</p>

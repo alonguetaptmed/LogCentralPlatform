@@ -2,98 +2,432 @@
     ViewData["Title"] = "Tableau de bord";
 }
 
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1><i class="bi bi-speedometer2 me-2"></i>Tableau de bord</h1>
+        <p class="text-muted">Vue d'ensemble des performances et de l'état de vos services</p>
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="periodDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-calendar-range me-1"></i> Dernières 24h
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="periodDropdown">
+                <li><a class="dropdown-item active" href="#">Dernières 24h</a></li>
+                <li><a class="dropdown-item" href="#">7 derniers jours</a></li>
+                <li><a class="dropdown-item" href="#">30 derniers jours</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Période personnalisée</a></li>
+            </ul>
+        </div>
+        <button class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise me-1"></i> Actualiser
+        </button>
+    </div>
+</div>
+
+<!-- Statistiques principales -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card dashboard-widget">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="card-text text-muted mb-1">Logs totaux</p>
+                        <h3 class="card-title stat-value mb-0">128,456</h3>
+                    </div>
+                    <div class="stat-icon text-primary">
+                        <i class="bi bi-file-text"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-success">+12.5%</span>
+                    <small class="text-muted ms-2">vs période précédente</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card dashboard-widget">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="card-text text-muted mb-1">Erreurs</p>
+                        <h3 class="card-title stat-value mb-0">824</h3>
+                    </div>
+                    <div class="stat-icon text-danger">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-danger">+5.2%</span>
+                    <small class="text-muted ms-2">vs période précédente</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card dashboard-widget">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="card-text text-muted mb-1">Services actifs</p>
+                        <h3 class="card-title stat-value mb-0">24/25</h3>
+                    </div>
+                    <div class="stat-icon text-success">
+                        <i class="bi bi-gear"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-success">96%</span>
+                    <small class="text-muted ms-2">taux de disponibilité</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card dashboard-widget">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="card-text text-muted mb-1">Alertes actives</p>
+                        <h3 class="card-title stat-value mb-0">12</h3>
+                    </div>
+                    <div class="stat-icon text-warning">
+                        <i class="bi bi-bell"></i>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-warning">3 critiques</span>
+                    <small class="text-muted ms-2">nécessitant attention</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Graphique principal d'activité -->
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Activité des logs par niveau</h5>
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-secondary active">Heure</button>
+                <button type="button" class="btn btn-outline-secondary">Jour</button>
+                <button type="button" class="btn btn-outline-secondary">Semaine</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div style="height: 300px; width: 100%;" class="d-flex align-items-center justify-content-center">
+            <p class="text-muted m-0">Graphique d'activité (placeholder)</p>
+        </div>
+    </div>
+</div>
+
 <div class="row">
-    <div class="col-12">
-        <h1>Tableau de bord</h1>
-        <p class="lead">Bienvenue sur votre tableau de bord LogCentralPlatform.</p>
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-md-4">
-        <div class="card border-primary mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Résumé des logs</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Logs aujourd'hui</span>
-                    <span class="badge bg-primary">0</span>
-                </div>
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Erreurs critiques</span>
-                    <span class="badge bg-danger">0</span>
-                </div>
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Erreurs</span>
-                    <span class="badge bg-danger">0</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span>Avertissements</span>
-                    <span class="badge bg-warning">0</span>
-                </div>
-            </div>
-            <div class="card-footer">
-                <a href="/Logs" class="btn btn-primary btn-sm">Voir les logs</a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="card border-success mb-4">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0">Services</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Services actifs</span>
-                    <span class="badge bg-success">0</span>
-                </div>
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Services hors ligne</span>
-                    <span class="badge bg-danger">0</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span>Services avec alerte</span>
-                    <span class="badge bg-warning">0</span>
-                </div>
-            </div>
-            <div class="card-footer">
-                <a href="/Services" class="btn btn-success btn-sm">Gérer les services</a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="card border-info mb-4">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">Actions rapides</h5>
-            </div>
-            <div class="card-body">
-                <div class="list-group">
-                    <a href="/Services/Create" class="list-group-item list-group-item-action">Ajouter un service</a>
-                    <a href="/Clients/Create" class="list-group-item list-group-item-action">Ajouter un client</a>
-                    <a href="/Reports/Generate" class="list-group-item list-group-item-action">Générer un rapport</a>
-                    <a href="/Services/Analyze" class="list-group-item list-group-item-action">Analyser les logs</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-2">
-    <div class="col-12">
-        <div class="card">
+    <!-- Liste des services -->
+    <div class="col-md-7">
+        <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Activité récente</h5>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>État des services</h5>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-plus me-1"></i> Ajouter service
+                    </button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover m-0">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Environnement</th>
+                            <th>Version</th>
+                            <th>État</th>
+                            <th>Dernier rapport</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary rounded me-2" style="width: 10px; height: 10px;"></div>
+                                    <span>API Authentification</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-info">Production</span></td>
+                            <td>v2.1.3</td>
+                            <td><span class="badge bg-success">En ligne</span></td>
+                            <td>
+                                <span data-bs-toggle="tooltip" title="29/03/2025 15:12:05">
+                                    Il y a 5 min
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Détails">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Logs">
+                                        <i class="bi bi-list-ul"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-danger rounded me-2" style="width: 10px; height: 10px;"></div>
+                                    <span>Serveur Base de données</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-info">Production</span></td>
+                            <td>v3.0.1</td>
+                            <td><span class="badge bg-danger">Erreurs</span></td>
+                            <td>
+                                <span data-bs-toggle="tooltip" title="29/03/2025 14:45:22">
+                                    Il y a 32 min
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Détails">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Logs">
+                                        <i class="bi bi-list-ul"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary rounded me-2" style="width: 10px; height: 10px;"></div>
+                                    <span>API Paiements</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-info">Production</span></td>
+                            <td>v1.5.0</td>
+                            <td><span class="badge bg-success">En ligne</span></td>
+                            <td>
+                                <span data-bs-toggle="tooltip" title="29/03/2025 15:05:41">
+                                    Il y a 12 min
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Détails">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Logs">
+                                        <i class="bi bi-list-ul"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning rounded me-2" style="width: 10px; height: 10px;"></div>
+                                    <span>Service Notifications</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-info">Production</span></td>
+                            <td>v2.0.1</td>
+                            <td><span class="badge bg-warning">Avertissements</span></td>
+                            <td>
+                                <span data-bs-toggle="tooltip" title="29/03/2025 14:55:18">
+                                    Il y a 22 min
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Détails">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Logs">
+                                        <i class="bi bi-list-ul"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-secondary rounded me-2" style="width: 10px; height: 10px;"></div>
+                                    <span>Service Rapports</span>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-secondary">Maintenance</span></td>
+                            <td>v1.2.5</td>
+                            <td><span class="badge bg-secondary">Hors ligne</span></td>
+                            <td>
+                                <span data-bs-toggle="tooltip" title="28/03/2025 20:05:11">
+                                    Il y a 18h
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Détails">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="Logs">
+                                        <i class="bi bi-list-ul"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-end">
+                <a href="/Services" class="btn btn-sm btn-outline-primary">Voir tous les services</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertes et statistiques -->
+    <div class="col-md-5">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertes récentes</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1 text-danger">
+                            <i class="bi bi-exclamation-circle me-1"></i> 
+                            Erreur critique
+                        </h6>
+                        <small>Il y a 35 min</small>
+                    </div>
+                    <p class="mb-1">Connexion à la base de données perdue</p>
+                    <small>Service: Serveur Base de données v3.0.1</small>
+                </div>
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1 text-warning">
+                            <i class="bi bi-exclamation-triangle me-1"></i> 
+                            Avertissement
+                        </h6>
+                        <small>Il y a 2 heures</small>
+                    </div>
+                    <p class="mb-1">Temps de réponse élevé (> 1500ms)</p>
+                    <small>Service: API Paiements v1.5.0</small>
+                </div>
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1 text-warning">
+                            <i class="bi bi-exclamation-triangle me-1"></i> 
+                            Avertissement
+                        </h6>
+                        <small>Il y a 3 heures</small>
+                    </div>
+                    <p class="mb-1">Limite d'utilisation de mémoire à 85%</p>
+                    <small>Service: Service Notifications v2.0.1</small>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <a href="#" class="btn btn-sm btn-outline-primary">Voir toutes les alertes</a>
+            </div>
+        </div>
+
+        <!-- Répartition des erreurs -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Répartition des erreurs</h5>
             </div>
             <div class="card-body">
-                <p class="text-muted text-center">Aucune activité récente à afficher.</p>
+                <div class="d-flex flex-column">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div><span class="badge bg-danger">DB</span> Erreurs Base de données</div>
+                            <div class="fw-bold">42%</div>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 42%" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div><span class="badge bg-warning">API</span> Erreurs API</div>
+                            <div class="fw-bold">28%</div>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 28%" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div><span class="badge bg-info">AUTH</span> Erreurs Authentification</div>
+                            <div class="fw-bold">15%</div>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div><span class="badge bg-primary">UI</span> Erreurs Interface</div>
+                            <div class="fw-bold">10%</div>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div><span class="badge bg-secondary">AUTRES</span> Autres erreurs</div>
+                            <div class="fw-bold">5%</div>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-secondary" role="progressbar" style="width: 5%" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestions IA -->
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-robot me-2"></i>Suggestions de l'IA</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-3">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="bi bi-lightbulb" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h6 class="alert-heading">Optimisation base de données</h6>
+                            <p class="mb-0">Le temps de réponse de la base de données s'est dégradé de 15% cette semaine. Une optimisation des index est recommandée.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-warning mb-0">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="bi bi-lightbulb" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h6 class="alert-heading">Mise à jour recommandée</h6>
+                            <p class="mb-0">La version 2.2.0 de l'API Authentification est disponible, corrigeant 3 failles de sécurité potentielles.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">Mise à jour: 29/03/2025 14:30</small>
+                    <button class="btn btn-sm btn-outline-info">
+                        <i class="bi bi-arrow-clockwise me-1"></i> Actualiser
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <!-- Ici, vous pourriez ajouter des scripts pour des graphiques dynamiques, etc. -->
-}

@@ -20,7 +20,7 @@ namespace LogCentralPlatform.Api.Models
         /// Niveau de gravité du log (Information, Warning, Error, Critical, etc.).
         /// </summary>
         [Required]
-        public LogLevel Level { get; set; }
+        public Core.Entities.LogLevel Level { get; set; }
 
         /// <summary>
         /// Message principal du log.
@@ -118,7 +118,7 @@ namespace LogCentralPlatform.Api.Models
         /// <summary>
         /// Niveau de gravité minimum pour filtrer les logs.
         /// </summary>
-        public LogLevel? MinLevel { get; set; }
+        public Core.Entities.LogLevel? MinLevel { get; set; }
 
         /// <summary>
         /// Texte à rechercher dans les messages de log.
@@ -190,7 +190,7 @@ namespace LogCentralPlatform.Api.Models
         /// <summary>
         /// Niveau de gravité du log.
         /// </summary>
-        public LogLevel Level { get; set; }
+        public Core.Entities.LogLevel Level { get; set; }
 
         /// <summary>
         /// Message principal du log.

@@ -1,0 +1,92 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Connexion";
+    Layout = "_LayoutAuth";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="text-center mb-4">
+                <img src="~/images/logo.svg" alt="LogCentralPlatform" class="mb-4" style="height: 60px;" />
+                <h2 class="fw-bold">Bienvenue</h2>
+                <p class="text-muted">Connectez-vous pour accéder à votre espace</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="All" class="alert alert-danger mb-4" role="alert"></div>
+                        
+                        <input type="hidden" asp-for="ReturnUrl" />
+                        
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label">Adresse e-mail</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="Email" class="form-control" placeholder="nom@domaine.com" autofocus />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between">
+                                <label asp-for="Password" class="form-label">Mot de passe</label>
+                                <a href="/Account/ForgotPassword" class="small text-primary">Mot de passe oublié ?</a>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input asp-for="Password" class="form-control" type="password" placeholder="Votre mot de passe" />
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-bs-toggle="tooltip" title="Afficher/Masquer">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" asp-for="RememberMe" id="remember-me">
+                            <label class="form-check-label" for="remember-me">
+                                Se souvenir de moi
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p class="text-muted">Vous n'avez pas de compte ? <a href="/Account/Register" class="text-primary">Demandez un accès</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle password visibility
+            const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+            
+            togglePasswordButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const icon = this.querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.replace('bi-eye', 'bi-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.replace('bi-eye-slash', 'bi-eye');
+                    }
+                });
+            });
+        });
+    </script>
+}

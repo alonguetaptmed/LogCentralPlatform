@@ -1,0 +1,507 @@
+@model ClientDetailsViewModel
+@{
+    ViewData["Title"] = $"Client - {Model.Name}";
+}
+
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Accueil</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Clients" asp-action="Index"><i class="bi bi-building"></i> Clients</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="bg-@(Model.IsActive ? "success" : "secondary") rounded-circle p-1">
+                <i class="bi bi-building text-white"></i>
+            </div>
+            <h1 class="mb-0">@Model.Name</h1>
+            <span class="badge bg-@(Model.IsActive ? "success" : "secondary")">
+                @(Model.IsActive ? "Actif" : "Inactif")
+            </span>
+        </div>
+        <p class="text-muted mt-2">Code client : @Model.Code</p>
+    </div>
+    <div class="d-flex gap-2">
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="clientActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-gear me-1"></i> Actions
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="clientActionsDropdown">
+                <li><a class="dropdown-item" href="#"><i class="bi bi-envelope me-2"></i>Envoyer un e-mail</a></li>
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="bi bi-person-plus me-2"></i>Ajouter un utilisateur</a></li>
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addServiceModal"><i class="bi bi-hdd-stack-fill me-2"></i>Ajouter un service</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#" onclick="confirmDeactivate('@Model.Id')"><i class="bi bi-slash-circle me-2"></i>Désactiver le client</a></li>
+            </ul>
+        </div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+            <i class="bi bi-pencil me-1"></i> Modifier
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informations</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Nom</dt>
+                    <dd class="col-sm-7">@Model.Name</dd>
+                    
+                    <dt class="col-sm-5">Code</dt>
+                    <dd class="col-sm-7">@Model.Code</dd>
+                    
+                    <dt class="col-sm-5">Contact</dt>
+                    <dd class="col-sm-7">@Model.ContactName</dd>
+                    
+                    <dt class="col-sm-5">Email</dt>
+                    <dd class="col-sm-7">
+                        <a href="mailto:@Model.Email">@Model.Email</a>
+                    </dd>
+                    
+                    <dt class="col-sm-5">Téléphone</dt>
+                    <dd class="col-sm-7">
+                        @if (!string.IsNullOrEmpty(Model.Phone))
+                        {
+                            <a href="tel:@Model.Phone">@Model.Phone</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Non renseigné</span>
+                        }
+                    </dd>
+                    
+                    <dt class="col-sm-5">Adresse</dt>
+                    <dd class="col-sm-7">
+                        @if (!string.IsNullOrEmpty(Model.Address))
+                        {
+                            @Model.Address
+                        }
+                        else
+                        {
+                            <span class="text-muted">Non renseignée</span>
+                        }
+                    </dd>
+                    
+                    <dt class="col-sm-5">Créé le</dt>
+                    <dd class="col-sm-7">@Model.CreatedAt.ToString("dd/MM/yyyy")</dd>
+                    
+                    <dt class="col-sm-5">État</dt>
+                    <dd class="col-sm-7">
+                        <span class="badge bg-@(Model.IsActive ? "success" : "secondary")">
+                            @(Model.IsActive ? "Actif" : "Inactif")
+                        </span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Statistiques</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 text-center h-100">
+                            <div class="stat-value text-primary">@Model.ServiceCount</div>
+                            <div class="stat-label">Services</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 text-center h-100">
+                            <div class="stat-value text-success">@Model.UserCount</div>
+                            <div class="stat-label">Utilisateurs</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 text-center h-100">
+                            <div class="stat-value text-info">@Model.LogCount</div>
+                            <div class="stat-label">Logs</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <label class="form-label">Activité des 30 derniers jours</label>
+                    <div style="height: 150px; width: 100%;" class="d-flex align-items-center justify-content-center border rounded">
+                        <p class="text-muted m-0">Graphique d'activité (placeholder)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-hdd-stack me-2"></i>Services</h5>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+                        <i class="bi bi-plus-circle me-1"></i> Ajouter un service
+                    </button>
+                </div>
+            </div>
+            @if (Model.Services != null && Model.Services.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;"></th>
+                                <th>Nom du service</th>
+                                <th>Environnement</th>
+                                <th>Version</th>
+                                <th>État</th>
+                                <th>Dernière activité</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var service in Model.Services)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @{
+                                            string statusColor = service.Status switch
+                                            {
+                                                "Active" => "success",
+                                                "Warning" => "warning",
+                                                "Error" => "danger",
+                                                _ => "secondary"
+                                            };
+                                        }
+                                        <div class="bg-@statusColor rounded" style="width: 10px; height: 10px; display: inline-block;"></div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-medium">@service.Name</div>
+                                        <div class="small text-muted">@service.Description</div>
+                                    </td>
+                                    <td><span class="badge bg-info">@service.Environment</span></td>
+                                    <td>v@(service.Version)</td>
+                                    <td>
+                                        @{
+                                            string badgeClass = service.Status switch
+                                            {
+                                                "Active" => "bg-success",
+                                                "Warning" => "bg-warning",
+                                                "Error" => "bg-danger",
+                                                _ => "bg-secondary"
+                                            };
+                                            
+                                            string statusText = service.Status switch
+                                            {
+                                                "Active" => "En ligne",
+                                                "Warning" => "Avertissements",
+                                                "Error" => "Erreurs",
+                                                _ => "Hors ligne"
+                                            };
+                                        }
+                                        <span class="badge @badgeClass">@statusText</span>
+                                    </td>
+                                    <td>
+                                        <span data-bs-toggle="tooltip" title="@service.LastActivity.ToString("dd/MM/yyyy HH:mm:ss")">
+                                            @{
+                                                var timeDiff = DateTime.Now - service.LastActivity;
+                                                string activityText = timeDiff.TotalMinutes < 60 
+                                                    ? $"Il y a {(int)timeDiff.TotalMinutes} min" 
+                                                    : timeDiff.TotalHours < 24 
+                                                        ? $"Il y a {(int)timeDiff.TotalHours}h" 
+                                                        : service.LastActivity.ToString("dd/MM/yyyy");
+                                            }
+                                            @activityText
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="/Services/Details/@service.Id" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Détails">
+                                                <i class="bi bi-info-circle"></i>
+                                            </a>
+                                            <a href="/Home/Logs?serviceId=@service.Id" class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Logs">
+                                                <i class="bi bi-list-ul"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                @if (Model.Services.Count > 5)
+                {
+                    <div class="card-footer text-end">
+                        <a href="/Services?clientId=@Model.Id" class="btn btn-sm btn-outline-primary">
+                            Voir tous les services
+                        </a>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="card-body py-4">
+                    <div class="text-center">
+                        <i class="bi bi-hdd-stack" style="font-size: 2rem; color: var(--gray-300);"></i>
+                        <p class="text-muted mt-3 mb-0">Aucun service n'a été créé pour ce client.</p>
+                        <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+                            <i class="bi bi-plus-circle me-1"></i> Ajouter un service
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-people me-2"></i>Utilisateurs</h5>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                        <i class="bi bi-person-plus me-1"></i> Ajouter un utilisateur
+                    </button>
+                </div>
+            </div>
+            @if (Model.Users != null && Model.Users.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Rôle</th>
+                                <th>Dernière connexion</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Users)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-2">
+                                                <i class="bi bi-person-circle text-secondary" style="font-size: 1.2rem;"></i>
+                                            </div>
+                                            <div>
+                                                @user.FullName
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@user.Email</td>
+                                    <td><span class="badge bg-secondary">@user.Role</span></td>
+                                    <td>
+                                        @if (user.LastLoginAt.HasValue)
+                                        {
+                                            <span data-bs-toggle="tooltip" title="@user.LastLoginAt?.ToString("dd/MM/yyyy HH:mm:ss")">
+                                                @{
+                                                    var timeDiff = DateTime.Now - user.LastLoginAt.Value;
+                                                    string activityText = timeDiff.TotalMinutes < 60 
+                                                        ? $"Il y a {(int)timeDiff.TotalMinutes} min" 
+                                                        : timeDiff.TotalHours < 24 
+                                                            ? $"Il y a {(int)timeDiff.TotalHours}h" 
+                                                            : user.LastLoginAt.Value.ToString("dd/MM/yyyy");
+                                                }
+                                                @activityText
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Jamais connecté</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (user.IsActive)
+                                        {
+                                            <span class="badge bg-success">Actif</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Inactif</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Réinitialiser mot de passe">
+                                                <i class="bi bi-key"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Désactiver">
+                                                <i class="bi bi-slash-circle"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="card-body py-4">
+                    <div class="text-center">
+                        <i class="bi bi-people" style="font-size: 2rem; color: var(--gray-300);"></i>
+                        <p class="text-muted mt-3 mb-0">Aucun utilisateur n'a été créé pour ce client.</p>
+                        <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                            <i class="bi bi-person-plus me-1"></i> Ajouter un utilisateur
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter Service -->
+<div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addServiceModalLabel"><i class="bi bi-plus-circle me-2"></i>Nouveau service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Services" asp-action="Create" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="ClientId" value="@Model.Id" />
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nom du service</label>
+                            <input type="text" name="Name" class="form-control" required/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Version</label>
+                            <input type="text" name="Version" class="form-control" placeholder="1.0.0" required/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Environnement</label>
+                            <select name="Environment" class="form-select" required>
+                                <option value="Production">Production</option>
+                                <option value="Staging">Recette</option>
+                                <option value="Development">Développement</option>
+                                <option value="Testing">Test</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea name="Description" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Intervalle de monitoring (min)</label>
+                            <input type="number" name="MonitoringInterval" class="form-control" value="15" min="1" max="1440" required/>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Options</label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" name="EnableAIAnalysis" id="enableAIService" checked>
+                                <label class="form-check-label" for="enableAIService">Activer l'analyse IA</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i> Créer le service
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter Utilisateur -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel"><i class="bi bi-person-plus me-2"></i>Nouvel utilisateur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Users" asp-action="Create" method="post">
+                    <input type="hidden" name="ClientId" value="@Model.Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Prénom</label>
+                        <input type="text" name="FirstName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nom</label>
+                        <input type="text" name="LastName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="Email" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rôle</label>
+                        <select name="Role" class="form-select" required>
+                            <option value="">Sélectionnez un rôle</option>
+                            <option value="Admin">Administrateur</option>
+                            <option value="Manager">Manager</option>
+                            <option value="User">Utilisateur standard</option>
+                            <option value="Viewer">Lecteur</option>
+                        </select>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" name="SendInvitation" id="sendInvitation" checked>
+                        <label class="form-check-label" for="sendInvitation">Envoyer une invitation par email</label>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Un email d'invitation avec un lien de création de mot de passe sera envoyé à l'utilisateur.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-person-plus me-1"></i> Créer l'utilisateur
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmation Désactivation -->
+<div class="modal fade" id="deactivateConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle me-2"></i>Confirmation de désactivation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir désactiver le client <strong>@Model.Name</strong> ?</p>
+                <p class="text-muted">Cette action désactivera l'accès pour tous les utilisateurs de ce client.</p>
+                <p class="text-muted">Les services continueront à fonctionner mais ne pourront plus être consultés par les utilisateurs du client.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form asp-action="Deactivate" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-slash-circle me-1"></i> Désactiver le client
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDeactivate(id) {
+            var deactivateModal = new bootstrap.Modal(document.getElementById('deactivateConfirmModal'));
+            deactivateModal.show();
+        }
+    </script>
+}

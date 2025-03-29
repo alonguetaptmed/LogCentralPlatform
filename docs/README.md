@@ -13,6 +13,9 @@ Bienvenue dans la documentation officielle de LogCentralPlatform, une solution c
 7. [Sécurité](#sécurité)
 8. [Intégration n8n](#intégration-n8n)
 9. [Développement](#développement)
+   - [Structure du code](#structure-du-code)
+   - [Résolution des erreurs de build](development/RESOLUTION_ERREURS_BUILD.md)
+   - [Contribution](#contribution)
 10. [FAQ](#faq)
 
 ## Vue d'ensemble
@@ -300,6 +303,10 @@ Le projet suit les principes SOLID et utilise une architecture en couches :
 - **Infrastructure** : Accès aux données et services externes
 - **API** : Points d'entrée REST
 - **Web** : Interface utilisateur
+
+### Résolution des problèmes courants
+
+Si vous rencontrez des erreurs lors de la construction ou de l'exécution du projet, consultez notre [guide de résolution des erreurs de build](development/RESOLUTION_ERREURS_BUILD.md) qui contient des solutions aux problèmes les plus fréquents.
 
 ### Contribution
 

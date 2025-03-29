@@ -66,12 +66,12 @@ namespace LogCentralPlatform.Infrastructure.Services
                 };
 
                 // Ajout d'anomalies et suggestions simples basées sur le niveau de log
-                if (logEntry.Level >= LogLevel.Error)
+                if (logEntry.Level >= Core.Entities.LogLevel.Error)
                 {
                     analysisResult.Anomalies.Add(new AIAnomaly
                     {
                         Id = Guid.NewGuid(),
-                        Type = logEntry.Level == LogLevel.Error ? "Error" : "Critical Error",
+                        Type = logEntry.Level == Core.Entities.LogLevel.Error ? "Error" : "Critical Error",
                         Description = $"Detected {logEntry.Level} in service {logEntry.ServiceName}: {logEntry.Message}",
                         Severity = logEntry.Level,
                         RelatedLogIds = new List<Guid> { logEntry.Id },
@@ -135,8 +135,8 @@ namespace LogCentralPlatform.Infrastructure.Services
 
                 // Analyser les motifs de base
                 var logCount = logs.Count();
-                var errorCount = logs.Count(l => l.Level >= LogLevel.Error);
-                var warningCount = logs.Count(l => l.Level == LogLevel.Warning);
+                var errorCount = logs.Count(l => l.Level >= Core.Entities.LogLevel.Error);
+                var warningCount = logs.Count(l => l.Level == Core.Entities.LogLevel.Warning);
                 var serviceGroups = logs.GroupBy(l => l.ServiceId).ToList();
 
                 // Enrichir le résumé
@@ -148,7 +148,7 @@ namespace LogCentralPlatform.Infrastructure.Services
                 {
                     // Regrouper les erreurs similaires
                     var errorGroups = logs
-                        .Where(l => l.Level >= LogLevel.Error)
+                        .Where(l => l.Level >= Core.Entities.LogLevel.Error)
                         .GroupBy(l => new { l.Message })
                         .Where(g => g.Count() > 1)
                         .OrderByDescending(g => g.Count())
@@ -157,17 +157,17 @@ namespace LogCentralPlatform.Infrastructure.Services
 
                     foreach (var group in errorGroups)
                     {
-                        var logs = group.ToList();
+                        var groupLogs = group.ToList();
                         analysisResult.Anomalies.Add(new AIAnomaly
                         {
                             Id = Guid.NewGuid(),
                             Type = "Recurring Error",
                             Description = $"Recurring error: {group.Key.Message}",
-                            Severity = LogLevel.Error,
-                            RelatedLogIds = logs.Select(l => l.Id).ToList(),
-                            OccurrenceCount = logs.Count,
-                            FirstOccurrence = logs.Min(l => l.Timestamp),
-                            LastOccurrence = logs.Max(l => l.Timestamp)
+                            Severity = Core.Entities.LogLevel.Error,
+                            RelatedLogIds = groupLogs.Select(l => l.Id).ToList(),
+                            OccurrenceCount = groupLogs.Count,
+                            FirstOccurrence = groupLogs.Min(l => l.Timestamp),
+                            LastOccurrence = groupLogs.Max(l => l.Timestamp)
                         });
                     }
 
@@ -220,7 +220,7 @@ namespace LogCentralPlatform.Infrastructure.Services
                     Id = Guid.NewGuid(),
                     Type = "Unusual Error Rate",
                     Description = $"Unusual error rate detected for service {serviceId} between {startDate} and {endDate}",
-                    Severity = LogLevel.Warning,
+                    Severity = Core.Entities.LogLevel.Warning,
                     RelatedLogIds = new List<Guid>(),
                     OccurrenceCount = 1,
                     FirstOccurrence = startDate,
@@ -300,12 +300,12 @@ namespace LogCentralPlatform.Infrastructure.Services
                     StartDate = startDate,
                     EndDate = endDate,
                     ExecutiveSummary = $"This is a report for service {serviceId} covering the period from {startDate} to {endDate}.",
-                    LogLevelStats = new Dictionary<LogLevel, int>
+                    LogLevelStats = new Dictionary<Core.Entities.LogLevel, int>
                     {
-                        { LogLevel.Information, 100 },
-                        { LogLevel.Warning, 20 },
-                        { LogLevel.Error, 5 },
-                        { LogLevel.Critical, 1 }
+                        { Core.Entities.LogLevel.Information, 100 },
+                        { Core.Entities.LogLevel.Warning, 20 },
+                        { Core.Entities.LogLevel.Error, 5 },
+                        { Core.Entities.LogLevel.Critical, 1 }
                     },
                     Anomalies = new List<AIAnomaly>(),
                     Suggestions = new List<AISuggestion>(),
@@ -339,15 +339,15 @@ namespace LogCentralPlatform.Infrastructure.Services
                 var categories = new List<string>();
 
                 // Catégorisation basique selon le niveau du log
-                if (logEntry.Level >= LogLevel.Error)
+                if (logEntry.Level >= Core.Entities.LogLevel.Error)
                 {
                     categories.Add("Error");
-                    if (logEntry.Level == LogLevel.Critical)
+                    if (logEntry.Level == Core.Entities.LogLevel.Critical)
                     {
                         categories.Add("Critical");
                     }
                 }
-                else if (logEntry.Level == LogLevel.Warning)
+                else if (logEntry.Level == Core.Entities.LogLevel.Warning)
                 {
                     categories.Add("Warning");
                 }
@@ -442,13 +442,13 @@ namespace LogCentralPlatform.Infrastructure.Services
             // Analyse selon le niveau de log
             switch (logEntry.Level)
             {
-                case LogLevel.Critical:
+                case Core.Entities.LogLevel.Critical:
                     builder.AppendLine("This is a CRITICAL error that requires immediate attention.");
                     break;
-                case LogLevel.Error:
+                case Core.Entities.LogLevel.Error:
                     builder.AppendLine("This is an ERROR that should be investigated.");
                     break;
-                case LogLevel.Warning:
+                case Core.Entities.LogLevel.Warning:
                     builder.AppendLine("This is a WARNING that may indicate potential issues.");
                     break;
                 default:

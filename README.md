@@ -179,9 +179,40 @@ var response = await client.PostAsync("https://votre-instance/api/logs", content
 
 ### Base de données
 
+#### Problèmes avec Entity Framework Core Migrations
+
+Si vous rencontrez des difficultés avec les migrations EF Core, vous pouvez générer un script SQL et l'exécuter directement:
+
+**Windows**:
+```powershell
+.\generate_sql_script.ps1
+```
+
+**Linux/macOS**:
+```bash
+chmod +x generate_sql_script.sh
+./generate_sql_script.sh
+```
+
+Ces scripts généreront un fichier `database_creation_script.sql` que vous pourrez exécuter directement dans SQL Server Management Studio ou via `sqlcmd`.
+
+#### Autres problèmes de base de données
+
 - **Erreur de connexion**: Vérifiez que SQL Server est en cours d'exécution et que la chaîne de connexion est correcte
 - **Erreur "Login failed for user"**: Vérifiez les identifiants SQL Server et assurez-vous que l'authentification SQL est activée
-- **Erreur de migration**: Supprimez la base de données existante et relancez les migrations
+- **Erreur "Cannot open database"**: Assurez-vous que la base de données existe ou que l'utilisateur a les droits pour la créer
+
+### Erreurs de compilation
+
+- **Métadonnées manquantes ou références introuvables**: 
+  ```bash
+  dotnet restore
+  dotnet build /p:WarningLevel=0
+  ```
+
+- **Erreurs d'ambiguïté de type (par exemple, `LogLevel`)**: Utilisez le nom complet du type, par exemple `LogCentralPlatform.Core.Entities.LogLevel`
+
+- **Implémentations de méthodes manquantes**: Vérifiez que toutes les méthodes définies dans les interfaces sont correctement implémentées
 
 ### Application
 

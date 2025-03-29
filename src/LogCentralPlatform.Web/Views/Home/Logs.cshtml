@@ -1,0 +1,120 @@
+@model LogListViewModel
+@{
+    ViewData["Title"] = "Logs";
+}
+
+<div class="container">
+    <h1>Logs</h1>
+    <p class="lead">Consultez et recherchez les logs de vos services.</p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Filtres</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-action="Logs">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="serviceId" class="form-label">Service</label>
+                        <select id="serviceId" name="serviceId" class="form-select">
+                            <option value="">Tous les services</option>
+                            <!-- Options dynamiques à ajouter en production -->
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="levelFilter" class="form-label">Niveau</label>
+                        <select id="levelFilter" name="levelFilter" class="form-select" asp-items="Html.GetEnumSelectList<LogLevel>()">
+                            <option value="">Tous les niveaux</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="startDate" class="form-label">Date début</label>
+                        <input type="date" id="startDate" name="startDate" class="form-control" value="@(Model.StartDate?.ToString("yyyy-MM-dd"))" />
+                    </div>
+                    <div class="col-md-3">
+                        <label for="endDate" class="form-label">Date fin</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control" value="@(Model.EndDate?.ToString("yyyy-MM-dd"))" />
+                    </div>
+                    <div class="col-md-10">
+                        <label for="searchText" class="form-label">Recherche</label>
+                        <input type="text" id="searchText" name="searchText" class="form-control" placeholder="Rechercher dans les messages, exceptions..." value="@Model.SearchText" />
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Résultats</h5>
+                <span class="badge bg-secondary">@Model.TotalCount logs</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Logs.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Horodatage</th>
+                                <th>Niveau</th>
+                                <th>Service</th>
+                                <th>Message</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var log in Model.Logs)
+                            {
+                                <tr>
+                                    <td>@log.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td><span class="@log.LevelBadgeClass">@log.Level</span></td>
+                                    <td>@log.ServiceName</td>
+                                    <td>@(log.Message.Length > 100 ? log.Message.Substring(0, 97) + "..." : log.Message)</td>
+                                    <td>
+                                        <a asp-action="LogDetails" asp-route-id="@log.Id" class="btn btn-sm btn-outline-primary">Détails</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <p class="text-muted mb-0">Aucun log ne correspond à ces critères.</p>
+                </div>
+            }
+        </div>
+        
+        @if (Model.TotalPages > 1)
+        {
+            <div class="card-footer">
+                <nav>
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
+                            <a class="page-link" asp-action="Logs" asp-route-page="@(Model.CurrentPage - 1)" asp-route-levelFilter="@Model.LevelFilter" asp-route-serviceId="@Model.ServiceIdFilter" asp-route-clientId="@Model.ClientIdFilter" asp-route-searchText="@Model.SearchText" asp-route-startDate="@Model.StartDate?.ToString("yyyy-MM-dd")" asp-route-endDate="@Model.EndDate?.ToString("yyyy-MM-dd")">Précédent</a>
+                        </li>
+                        
+                        @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Logs" asp-route-page="@i" asp-route-levelFilter="@Model.LevelFilter" asp-route-serviceId="@Model.ServiceIdFilter" asp-route-clientId="@Model.ClientIdFilter" asp-route-searchText="@Model.SearchText" asp-route-startDate="@Model.StartDate?.ToString("yyyy-MM-dd")" asp-route-endDate="@Model.EndDate?.ToString("yyyy-MM-dd")">@i</a>
+                            </li>
+                        }
+                        
+                        <li class="page-item @(!Model.HasNextPage ? "disabled" : "")">
+                            <a class="page-link" asp-action="Logs" asp-route-page="@(Model.CurrentPage + 1)" asp-route-levelFilter="@Model.LevelFilter" asp-route-serviceId="@Model.ServiceIdFilter" asp-route-clientId="@Model.ClientIdFilter" asp-route-searchText="@Model.SearchText" asp-route-startDate="@Model.StartDate?.ToString("yyyy-MM-dd")" asp-route-endDate="@Model.EndDate?.ToString("yyyy-MM-dd")">Suivant</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+    </div>
+</div>

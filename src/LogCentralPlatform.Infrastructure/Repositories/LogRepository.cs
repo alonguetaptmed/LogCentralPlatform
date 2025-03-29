@@ -98,7 +98,7 @@ namespace LogCentralPlatform.Infrastructure.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<LogEntry>> GetByLevelAsync(LogLevel level, int skip = 0, int take = 100)
+        public async Task<IEnumerable<LogEntry>> GetByLevelAsync(Core.Entities.LogLevel level, int skip = 0, int take = 100)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace LogCentralPlatform.Infrastructure.Repositories
             DateTime endDate, 
             Guid? serviceId = null, 
             Guid? clientId = null, 
-            LogLevel? level = null, 
+            Core.Entities.LogLevel? level = null, 
             int skip = 0, 
             int take = 100)
         {
@@ -264,7 +264,7 @@ namespace LogCentralPlatform.Infrastructure.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetCountByLevelAsync(LogLevel level)
+        public async Task<int> GetCountByLevelAsync(Core.Entities.LogLevel level)
         {
             try
             {

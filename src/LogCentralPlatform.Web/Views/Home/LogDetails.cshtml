@@ -1,13 +1,39 @@
 @model LogEntryViewModel
 @{
     ViewData["Title"] = "Détails du log";
+    
+    string GetHeaderClass(LogLevel level)
+    {
+        return level switch
+        {
+            LogLevel.Error => "header-error",
+            LogLevel.Critical => "header-critical",
+            LogLevel.Warning => "header-warning",
+            LogLevel.Information => "header-info",
+            _ => ""
+        };
+    }
+    
+    string GetLevelIcon(LogLevel level)
+    {
+        return level switch
+        {
+            LogLevel.Error => "bi-exclamation-triangle-fill",
+            LogLevel.Critical => "bi-exclamation-octagon-fill",
+            LogLevel.Warning => "bi-exclamation-circle-fill",
+            LogLevel.Information => "bi-info-circle-fill",
+            LogLevel.Debug => "bi-bug",
+            LogLevel.Trace => "bi-activity",
+            _ => "bi-info-circle"
+        };
+    }
 }
 
 <div class="container">
-    <nav aria-label="breadcrumb">
+    <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Accueil</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Logs">Logs</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Accueil</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Logs"><i class="bi bi-list-ul"></i> Logs</a></li>
             <li class="breadcrumb-item active" aria-current="page">Détails du log</li>
         </ol>
     </nav>
@@ -15,42 +41,100 @@
     <div class="row">
         <div class="col-md-8">
             <div class="card mb-4">
-                <div class="card-header @Model.LevelColorClass">
+                <div class="card-header @GetHeaderClass(Model.Level) d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        @if (Model.Level == LogLevel.Error || Model.Level == LogLevel.Critical)
-                        {
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        }
-                        else if (Model.Level == LogLevel.Warning)
-                        {
-                            <i class="bi bi-exclamation-circle-fill me-2"></i>
-                        }
-                        else
-                        {
-                            <i class="bi bi-info-circle-fill me-2"></i>
-                        }
+                        <i class="bi @GetLevelIcon(Model.Level) me-2"></i>
                         @Model.Level
                     </h5>
+                    <div>
+                        <span class="badge bg-light text-dark" data-bs-toggle="tooltip" title="Date et heure de l'événement">
+                            <i class="bi bi-clock me-1"></i> @Model.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")
+                        </span>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <h6 class="card-subtitle mb-3 text-muted">@Model.ServiceName (@Model.ServiceVersion) | @Model.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")</h6>
-                    <h5 class="card-title">@Model.Message</h5>
+                    <div class="d-flex justify-content-between mb-3">
+                        <h6 class="card-subtitle text-muted">
+                            <span data-bs-toggle="tooltip" title="Service concerné">
+                                <i class="bi bi-gear me-1"></i> @Model.ServiceName
+                            </span>
+                            <span class="mx-2">|</span>
+                            <span data-bs-toggle="tooltip" title="Version du service">
+                                <i class="bi bi-tag me-1"></i> @Model.ServiceVersion
+                            </span>
+                        </h6>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="copyToClipboard('@Model.Id', this)">
+                                <i class="bi bi-clipboard me-1"></i> Copier ID
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <h5 class="card-title mb-4 p-2 bg-light rounded">@Model.Message</h5>
 
                     @if (!string.IsNullOrEmpty(Model.ExceptionDetails))
                     {
                         <div class="mt-4">
-                            <h6>Détails de l'exception</h6>
-                            <pre class="bg-light p-3 rounded"><code>@Model.ExceptionDetails</code></pre>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6><i class="bi bi-exclamation-circle me-1"></i> Détails de l'exception</h6>
+                                <button class="btn btn-sm btn-outline-secondary toggle-exception" data-target="exceptionDetails">
+                                    <i class="bi bi-chevron-down"></i> Afficher les détails
+                                </button>
+                            </div>
+                            <pre id="exceptionDetails" class="bg-light p-3 rounded d-none"><code>@Model.ExceptionDetails</code></pre>
                         </div>
                     }
 
                     @if (!string.IsNullOrEmpty(Model.StackTrace))
                     {
                         <div class="mt-4">
-                            <h6>Stack Trace</h6>
-                            <pre class="bg-light p-3 rounded"><code>@Model.StackTrace</code></pre>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6><i class="bi bi-layers me-1"></i> Stack Trace</h6>
+                                <button class="btn btn-sm btn-outline-secondary toggle-exception" data-target="stackTrace">
+                                    <i class="bi bi-chevron-down"></i> Afficher la trace
+                                </button>
+                            </div>
+                            <pre id="stackTrace" class="bg-light p-3 rounded d-none"><code>@Model.StackTrace</code></pre>
                         </div>
                     }
+                </div>
+            </div>
+            
+            <!-- Section contextuelle -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-diagram-3 me-2"></i>Contexte</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Logs similaires</h6>
+                    <p class="text-muted small">Logs présentant des caractéristiques semblables (même service ou même erreur)</p>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Service</th>
+                                    <th>Message</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>28/03/2025 14:32</td>
+                                    <td>@Model.ServiceName</td>
+                                    <td class="text-truncate" style="max-width: 300px;">@Model.Message</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a></td>
+                                </tr>
+                                <tr>
+                                    <td>27/03/2025 09:15</td>
+                                    <td>@Model.ServiceName</td>
+                                    <td class="text-truncate" style="max-width: 300px;">@Model.Message</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -58,7 +142,7 @@
         <div class="col-md-4">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Informations</h5>
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informations</h5>
                 </div>
                 <div class="card-body">
                     <dl class="row mb-0">
@@ -72,7 +156,7 @@
                         <dd class="col-sm-7">@Model.ServiceVersion</dd>
                         
                         <dt class="col-sm-5">Environnement</dt>
-                        <dd class="col-sm-7">@Model.Environment</dd>
+                        <dd class="col-sm-7"><span class="badge bg-info">@Model.Environment</span></dd>
                         
                         <dt class="col-sm-5">Client</dt>
                         <dd class="col-sm-7">@(Model.ClientName ?? "N/A")</dd>
@@ -93,10 +177,20 @@
             {
                 <div class="card mb-4">
                     <div class="card-header bg-info text-white">
-                        <h5 class="mb-0">Analyse IA</h5>
+                        <h5 class="mb-0"><i class="bi bi-robot me-2"></i>Analyse IA</h5>
                     </div>
                     <div class="card-body">
-                        <p>@Model.AIAnalysisResult</p>
+                        <div class="alert alert-info">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            @Model.AIAnalysisResult
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <span class="text-muted small">Analysé le @DateTime.Now.AddHours(-2).ToString("dd/MM/yyyy HH:mm")</span>
+                            <button class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Ré-analyser
+                            </button>
+                        </div>
                     </div>
                 </div>
             }
@@ -104,20 +198,61 @@
             {
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5 class="mb-0">Analyse IA</h5>
+                        <h5 class="mb-0"><i class="bi bi-robot me-2"></i>Analyse IA</h5>
                     </div>
                     <div class="card-body">
                         <p class="text-muted">Ce log n'a pas encore été analysé par l'IA.</p>
                         <form asp-action="AnalyzeLog" asp-route-id="@Model.Id" method="post">
-                            <button type="submit" class="btn btn-primary">Analyser maintenant</button>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-magic me-1"></i> Analyser maintenant
+                            </button>
                         </form>
                     </div>
                 </div>
             }
 
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-tools me-2"></i>Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-code-slash me-1"></i> Voir le code source
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary">
+                            <i class="bi bi-archive me-1"></i> Archiver
+                        </a>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="exportOptions" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-download me-1"></i> Exporter
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="exportOptions">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-text me-2"></i>Texte brut</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-code me-2"></i>JSON</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="d-grid gap-2">
-                <a asp-action="Logs" class="btn btn-secondary">Retour aux logs</a>
+                <a asp-action="Logs" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Retour aux logs
+                </a>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight code blocks
+            document.querySelectorAll('pre code').forEach(block => {
+                block.classList.add('text-wrap');
+            });
+        });
+    </script>
+}

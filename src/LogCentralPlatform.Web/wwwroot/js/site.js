@@ -57,33 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }, 200);
     }
-
-    // Configuration de DateRangePicker pour les filtres de date si la bibliothèque est disponible
-    if (typeof $.fn.daterangepicker !== 'undefined') {
-        $('.date-range-picker').daterangepicker({
-            locale: {
-                format: 'DD/MM/YYYY',
-                applyLabel: 'Appliquer',
-                cancelLabel: 'Annuler',
-                fromLabel: 'Du',
-                toLabel: 'Au',
-                customRangeLabel: 'Période personnalisée',
-                daysOfWeek: ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'],
-                monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-                firstDay: 1
-            },
-            ranges: {
-               'Aujourd\'hui': [moment(), moment()],
-               'Hier': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-               '7 derniers jours': [moment().subtract(6, 'days'), moment()],
-               '30 derniers jours': [moment().subtract(29, 'days'), moment()],
-               'Ce mois': [moment().startOf('month'), moment().endOf('month')],
-               'Mois précédent': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            },
-            autoApply: true,
-            opens: 'left'
-        });
-    }
 });
 
 // Fonction pour copier du texte dans le presse-papiers

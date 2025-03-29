@@ -64,7 +64,7 @@ namespace LogCentralPlatform.Api.Models
         /// <summary>
         /// Niveau minimum de log pour déclencher une alerte.
         /// </summary>
-        public LogLevel AlertThreshold { get; set; } = LogLevel.Error;
+        public Core.Entities.LogLevel AlertThreshold { get; set; } = Core.Entities.LogLevel.Error;
 
         /// <summary>
         /// Destinataires des alertes par e-mail.
@@ -136,7 +136,7 @@ namespace LogCentralPlatform.Api.Models
         /// <summary>
         /// Niveau minimum de log pour déclencher une alerte.
         /// </summary>
-        public LogLevel? AlertThreshold { get; set; }
+        public Core.Entities.LogLevel? AlertThreshold { get; set; }
 
         /// <summary>
         /// Destinataires des alertes par e-mail.
@@ -247,7 +247,7 @@ namespace LogCentralPlatform.Api.Models
         /// <summary>
         /// Niveau minimum de log pour déclencher une alerte.
         /// </summary>
-        public LogLevel AlertThreshold { get; set; }
+        public Core.Entities.LogLevel AlertThreshold { get; set; }
 
         /// <summary>
         /// Destinataires des alertes par e-mail.

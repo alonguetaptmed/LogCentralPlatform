@@ -17,11 +17,11 @@
             <div class="card mb-4">
                 <div class="card-header @Model.LevelColorClass">
                     <h5 class="mb-0">
-                        @if (Model.Level == Core.Entities.LogLevel.Error || Model.Level == Core.Entities.LogLevel.Critical)
+                        @if (Model.Level == LogLevel.Error || Model.Level == LogLevel.Critical)
                         {
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
                         }
-                        else if (Model.Level == Core.Entities.LogLevel.Warning)
+                        else if (Model.Level == LogLevel.Warning)
                         {
                             <i class="bi bi-exclamation-circle-fill me-2"></i>
                         }

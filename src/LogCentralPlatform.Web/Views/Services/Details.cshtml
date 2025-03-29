@@ -1,0 +1,466 @@
+@model ServiceDetailsViewModel
+@{
+    ViewData["Title"] = $"Service - {Model.Name}";
+    
+    string GetStatusColor(string status)
+    {
+        return status switch
+        {
+            "Active" => "success",
+            "Warning" => "warning",
+            "Error" => "danger",
+            _ => "secondary"
+        };
+    }
+    
+    string FormatBytes(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+        double formattedSize = bytes;
+        int order = 0;
+        while (formattedSize >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            formattedSize /= 1024;
+        }
+        return $"{formattedSize:0.##} {sizes[order]}";
+    }
+}
+
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Accueil</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Services" asp-action="Index"><i class="bi bi-gear"></i> Services</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="bg-@GetStatusColor(Model.Status) rounded-circle p-1">
+                <i class="bi bi-hdd-stack text-white"></i>
+            </div>
+            <h1 class="mb-0">@Model.Name</h1>
+            <span class="badge bg-@GetStatusColor(Model.Status)">
+                @(Model.Status == "Active" ? "En ligne" : Model.Status == "Warning" ? "Avertissements" : Model.Status == "Error" ? "Erreurs" : "Hors ligne")
+            </span>
+        </div>
+        <p class="text-muted mt-2">@Model.Description</p>
+    </div>
+    <div class="d-flex gap-2">
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="serviceActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-gear me-1"></i> Actions
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="serviceActionsDropdown">
+                <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-clockwise me-2"></i>Redémarrer le service</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i>Vérifier l'état</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-key me-2"></i>Régénérer la clé API</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#" onclick="confirmDeactivate('@Model.Id')"><i class="bi bi-slash-circle me-2"></i>Désactiver le service</a></li>
+            </ul>
+        </div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+            <i class="bi bi-pencil me-1"></i> Modifier
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informations</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Version</dt>
+                    <dd class="col-sm-7">v@(Model.Version)</dd>
+                    
+                    <dt class="col-sm-5">Client</dt>
+                    <dd class="col-sm-7">@Model.ClientName</dd>
+                    
+                    <dt class="col-sm-5">Environnement</dt>
+                    <dd class="col-sm-7"><span class="badge bg-info">@Model.Environment</span></dd>
+                    
+                    <dt class="col-sm-5">Intervalle</dt>
+                    <dd class="col-sm-7">@Model.MonitoringInterval min</dd>
+                    
+                    <dt class="col-sm-5">IA Activée</dt>
+                    <dd class="col-sm-7">
+                        @if (Model.EnableAIAnalysis)
+                        {
+                            <span class="badge bg-success"><i class="bi bi-check"></i> Oui</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary"><i class="bi bi-x"></i> Non</span>
+                        }
+                    </dd>
+                    
+                    <dt class="col-sm-5">Créé le</dt>
+                    <dd class="col-sm-7">@Model.CreatedAt.ToString("dd/MM/yyyy")</dd>
+                    
+                    <dt class="col-sm-5">État actuel</dt>
+                    <dd class="col-sm-7">
+                        <span class="badge bg-@GetStatusColor(Model.Status)">
+                            @(Model.Status == "Active" ? "En ligne" : Model.Status == "Warning" ? "Avertissements" : Model.Status == "Error" ? "Erreurs" : "Hors ligne")
+                        </span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-key me-2"></i>Accès API</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Clé API</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="apiKey" value="@Model.ApiKey" readonly />
+                        <button class="btn btn-outline-secondary" type="button" onclick="toggleApiKeyVisibility()">
+                            <i class="bi bi-eye" id="toggleIcon"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('@Model.ApiKey', this)" data-bs-toggle="tooltip" title="Copier">
+                            <i class="bi bi-clipboard"></i>
+                        </button>
+                    </div>
+                    <small class="text-muted">Cette clé est utilisée pour authentifier le service lors de l'envoi de logs</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">URL d'API</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="https://api.logcentralplatform.com/logs" readonly />
+                        <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('https://api.logcentralplatform.com/logs', this)" data-bs-toggle="tooltip" title="Copier">
+                            <i class="bi bi-clipboard"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-4 d-grid">
+                    <button class="btn btn-outline-primary" type="button" onclick="regenerateApiKey('@Model.Id')">
+                        <i class="bi bi-arrow-repeat me-1"></i> Régénérer la clé API
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Statistiques</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 text-center h-100">
+                            <div class="stat-value text-primary">@Model.LogCount</div>
+                            <div class="stat-label">Logs totaux</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 text-center h-100">
+                            <div class="stat-value text-danger">@Model.ErrorCount</div>
+                            <div class="stat-label">Erreurs</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 text-center h-100">
+                            <div class="stat-value text-success">@Model.UptimePercentage%</div>
+                            <div class="stat-label">Disponibilité</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <label class="form-label">Distribution des logs par niveau</label>
+                        <div class="progress" style="height: 25px;">
+                            @{
+                                double infoPercentage = 65;
+                                double warningPercentage = 23;
+                                double errorPercentage = 10;
+                                double criticalPercentage = 2;
+                            }
+                            <div class="progress-bar bg-info" role="progressbar" style="width: @infoPercentage%" aria-valuenow="@infoPercentage" aria-valuemin="0" aria-valuemax="100">
+                                Info @infoPercentage%
+                            </div>
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: @warningPercentage%" aria-valuenow="@warningPercentage" aria-valuemin="0" aria-valuemax="100">
+                                @warningPercentage%
+                            </div>
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: @errorPercentage%" aria-valuenow="@errorPercentage" aria-valuemin="0" aria-valuemax="100">
+                                @errorPercentage%
+                            </div>
+                            <div class="progress-bar bg-dark" role="progressbar" style="width: @criticalPercentage%" aria-valuenow="@criticalPercentage" aria-valuemin="0" aria-valuemax="100">
+                                @criticalPercentage%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <label class="form-label">Activité récente (30 derniers jours)</label>
+                        <div style="height: 200px; width: 100%;" class="d-flex align-items-center justify-content-center">
+                            <p class="text-muted m-0">Graphique d'activité (placeholder)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Derniers logs</h5>
+                    <a href="/Home/Logs?serviceId=@Model.Id" class="btn btn-sm btn-outline-primary">
+                        Voir tous les logs
+                    </a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover m-0">
+                    <thead>
+                        <tr>
+                            <th>Horodatage</th>
+                            <th>Niveau</th>
+                            <th>Message</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentLogs != null && Model.RecentLogs.Any())
+                        {
+                            @foreach (var log in Model.RecentLogs)
+                            {
+                                <tr>
+                                    <td>@log.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td>
+                                        <span class="log-level log-level-@log.Level.ToString().ToLower()">@log.Level</span>
+                                    </td>
+                                    <td class="text-truncate" style="max-width: 500px;">@log.Message</td>
+                                    <td>
+                                        <a href="/Home/LogDetails/@log.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center py-4">
+                                    <p class="text-muted mb-0">Aucun log récent disponible pour ce service.</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-bell me-2"></i>Alertes configurées</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Alerts != null && Model.Alerts.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var alert in Model.Alerts)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-medium">@alert.Name</div>
+                                    <div class="small text-muted">@alert.Description</div>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" checked="@alert.IsActive" disabled>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="bi bi-bell-slash" style="font-size: 2rem; color: var(--gray-300);"></i>
+                        <p class="text-muted mt-3">Aucune alerte configurée pour ce service.</p>
+                    </div>
+                }
+                <div class="d-grid mt-3">
+                    <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#addAlertModal">
+                        <i class="bi bi-plus-circle me-1"></i> Configurer une alerte
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-robot me-2"></i>Suggestions de l'IA</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-0">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="bi bi-lightbulb" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h6 class="alert-heading">Optimisation recommandée</h6>
+                            <p class="mb-0">Envisagez de passer à la version 2.2.0 pour résoudre les problèmes de connexion à la base de données observés dans les logs récents.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter Alerte -->
+<div class="modal fade" id="addAlertModal" tabindex="-1" aria-labelledby="addAlertModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAlertModalLabel"><i class="bi bi-bell me-2"></i>Configurer une alerte</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Nom de l'alerte</label>
+                        <input type="text" class="form-control" placeholder="Ex: Erreurs critiques" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Type d'alerte</label>
+                        <select class="form-select" required>
+                            <option value="">Sélectionnez un type</option>
+                            <option value="LogLevel">Niveau de log spécifique</option>
+                            <option value="LogVolume">Volume de logs</option>
+                            <option value="Inactivity">Inactivité du service</option>
+                            <option value="ErrorRate">Taux d'erreurs</option>
+                            <option value="Pattern">Pattern dans les messages</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Seuil ou condition</label>
+                        <input type="text" class="form-control" placeholder="Ex: Error, >100, >30min, etc." required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Notification</label>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="emailNotif" checked>
+                            <label class="form-check-label" for="emailNotif">
+                                E-mail
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="smsNotif">
+                            <label class="form-check-label" for="smsNotif">
+                                SMS
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="pushNotif">
+                            <label class="form-check-label" for="pushNotif">
+                                Notification push
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" rows="2" placeholder="Description optionnelle de cette alerte"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary">
+                    <i class="bi bi-save me-1"></i> Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmation Désactivation -->
+<div class="modal fade" id="deactivateConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning"><i class="bi bi-exclamation-triangle me-2"></i>Confirmation de désactivation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir désactiver le service <strong>@Model.Name</strong> ?</p>
+                <p class="text-muted">Le service ne pourra plus envoyer de logs tant qu'il ne sera pas réactivé.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form asp-action="Deactivate" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-slash-circle me-1"></i> Désactiver le service
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleApiKeyVisibility() {
+            var apiKeyInput = document.getElementById('apiKey');
+            var toggleIcon = document.getElementById('toggleIcon');
+            
+            if (apiKeyInput.type === 'password') {
+                apiKeyInput.type = 'text';
+                toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                apiKeyInput.type = 'password';
+                toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        }
+        
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(function() {
+                var originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-check"></i>';
+                
+                setTimeout(function() {
+                    button.innerHTML = originalIcon;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Erreur lors de la copie: ', err);
+            });
+        }
+        
+        function regenerateApiKey(serviceId) {
+            if (confirm("Êtes-vous sûr de vouloir régénérer la clé API ? L'ancienne clé ne fonctionnera plus.")) {
+                // Dans un environnement réel, on effectuerait ici une requête AJAX 
+                // pour régénérer la clé API côté serveur
+                alert("Fonctionnalité à implémenter - La clé serait régénérée côté serveur.");
+            }
+        }
+        
+        function confirmDeactivate(id) {
+            var deactivateModal = new bootstrap.Modal(document.getElementById('deactivateConfirmModal'));
+            deactivateModal.show();
+        }
+    </script>
+}

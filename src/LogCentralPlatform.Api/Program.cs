@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using LogCentralPlatform.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -21,6 +22,9 @@ builder.Host.UseSerilog();
 
 // Ajouter les services au conteneur
 builder.Services.AddControllers();
+
+// Ajouter l'infrastructure
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Configurer la documentation Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -123,15 +127,6 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
-
-// Enregistrer les services d'infrastructure et de persistance
-// Remarque: Ces lignes seront complétées à mesure que les projets seront développés
-// builder.Services.AddScoped<ILogRepository, LogRepository>();
-// builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
-// builder.Services.AddScoped<IClientRepository, ClientRepository>();
-// builder.Services.AddScoped<IAuthService, AuthService>();
-// builder.Services.AddScoped<IAIAnalysisService, AIAnalysisService>();
-// builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var app = builder.Build();
 

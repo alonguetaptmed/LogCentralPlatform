@@ -57,43 +57,91 @@ Le projet est organisé en plusieurs couches selon les principes de la Clean Arc
 - SQL Server (local ou distant)
 - Visual Studio 2022 ou VS Code
 
-### Configuration
+### Configuration simplifiée (recommandée)
 
-1. Cloner le dépôt
-```bash
+Nous fournissons des scripts pour faciliter la configuration locale:
+
+#### Windows (PowerShell)
+
+1. Clonez le dépôt
+```powershell
 git clone https://github.com/alonguetaptmed/LogCentralPlatform.git
+cd LogCentralPlatform
 ```
 
-2. Restaurer les packages NuGet
+2. Exécutez le script de configuration
+```powershell
+.\setup_local.ps1
+```
+
+Le script vous guidera à travers les étapes pour:
+- Vérifier les prérequis
+- Restaurer les packages
+- Configurer la base de données
+- Compiler le projet
+- Lancer l'application
+
+#### Linux/macOS (Bash)
+
+1. Clonez le dépôt
+```bash
+git clone https://github.com/alonguetaptmed/LogCentralPlatform.git
+cd LogCentralPlatform
+```
+
+2. Rendez le script exécutable et lancez-le
+```bash
+chmod +x setup_local.sh
+./setup_local.sh
+```
+
+### Configuration manuelle
+
+Si vous préférez configurer manuellement:
+
+1. Clonez le dépôt
+```bash
+git clone https://github.com/alonguetaptmed/LogCentralPlatform.git
+cd LogCentralPlatform
+```
+
+2. Restaurez les packages NuGet
 ```bash
 dotnet restore
 ```
 
-3. Configurer la base de données
-- Mettre à jour la chaîne de connexion dans les fichiers `appsettings.json`
-- Appliquer les migrations
+3. Configurez la base de données
+   - Mettez à jour la chaîne de connexion dans les fichiers `src/LogCentralPlatform.Api/appsettings.json` et `src/LogCentralPlatform.Web/appsettings.json`
+   - Appliquez les migrations
+   ```bash
+   cd src/LogCentralPlatform.Api
+   dotnet ef database update
+   ```
+
+4. Compilez la solution
 ```bash
-cd src/LogCentralPlatform.Api
-dotnet ef database update
+dotnet build
 ```
 
-4. Configurer n8n pour l'analyse IA (optionnel)
-- Installer n8n : [https://n8n.io/](https://n8n.io/)
-- Configurer l'URL et la clé API dans `appsettings.json`
+5. Lancez l'application
+   - Pour l'API:
+   ```bash
+   cd src/LogCentralPlatform.Api
+   dotnet run
+   ```
+   - Pour l'interface Web (dans un autre terminal):
+   ```bash
+   cd src/LogCentralPlatform.Web
+   dotnet run
+   ```
 
-### Lancement
+### Premier accès à l'application
 
-Pour lancer l'API :
-```bash
-cd src/LogCentralPlatform.Api
-dotnet run
-```
+Après avoir démarré l'API et l'interface Web:
 
-Pour lancer l'interface web :
-```bash
-cd src/LogCentralPlatform.Web
-dotnet run
-```
+1. Accédez à l'interface Web via votre navigateur à l'adresse https://localhost:5003
+2. Créez un compte administrateur (lors du premier lancement)
+3. Connectez-vous et commencez à configurer vos services et clients
 
 ## Intégration dans les applications clientes
 
@@ -126,6 +174,27 @@ using var client = new HttpClient();
 client.DefaultRequestHeaders.Add("X-API-Key", "votre-clé-api");
 var response = await client.PostAsync("https://votre-instance/api/logs", content);
 ```
+
+## Résolution des problèmes courants
+
+### Base de données
+
+- **Erreur de connexion**: Vérifiez que SQL Server est en cours d'exécution et que la chaîne de connexion est correcte
+- **Erreur "Login failed for user"**: Vérifiez les identifiants SQL Server et assurez-vous que l'authentification SQL est activée
+- **Erreur de migration**: Supprimez la base de données existante et relancez les migrations
+
+### Application
+
+- **Erreur de compilation**: Vérifiez que .NET 8.0 SDK est correctement installé
+- **Erreur de port déjà utilisé**: Modifiez le port dans les propriétés de lancement ou arrêtez l'application qui utilise ce port
+
+## Documentation
+
+Une documentation plus détaillée est disponible dans le dossier `/docs`:
+- [Documentation principale](/docs/README.md)
+- [Guide de développement](/docs/development/GUIDE_DEVELOPPEMENT.md)
+- [Guide de déploiement](/docs/deployment/GUIDE_DEPLOIEMENT.md)
+- [Guide d'intégration](/docs/integration/GUIDE_INTEGRATION.md)
 
 ## Statut du projet
 

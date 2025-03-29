@@ -2,62 +2,139 @@
 
 Plateforme centralisée pour la gestion, l'analyse et la surveillance des logs d'applications en ASP.NET Core MVC.
 
-## Objectif du projet
+## Description du projet
 
-L'objectif est de développer une plateforme web en ASP.NET C# MVC permettant de centraliser, analyser et surveiller les logs des applications et services Windows déployés chez nos clients.
-
-Actuellement, ces logs sont stockés localement et les erreurs sont parfois remontées par e-mail, ce qui complique leur suivi et leur exploitation.
+LogCentralPlatform est une solution complète de gestion de logs qui permet de centraliser, analyser et surveiller les logs des applications et services Windows déployés chez des clients. Cette plateforme facilite le débogage et le monitoring en temps réel, et intègre des fonctionnalités d'analyse IA pour aider à la détection d'anomalies et à la résolution de problèmes.
 
 ## Fonctionnalités principales
 
-### 1. Collecte et stockage des logs via API
+### Collecte et stockage des logs via API
 
-- Développement d'une API REST sécurisée permettant aux applications déployées de pousser leurs logs en temps réel.
-- Attribution d'un identifiant unique (clé API) à chaque service déployé pour assurer une traçabilité et une classification des logs.
-- Stockage des logs en base de données avec une architecture optimisée pour la recherche et l'analyse (ex : SQL Server + indexation).
+- API REST sécurisée pour la transmission des logs en temps réel
+- Authentification par clé API pour chaque service
+- Stockage optimisé en base de données SQL Server avec indexation
 
-### 2. Suivi et gestion des services
+### Suivi et gestion des services
 
-- Interface utilisateur moderne et intuitive permettant de visualiser l'état des services en temps réel.
-- Possibilité de définir un intervalle minimal de reporting pour chaque service.
-- Alertes visuelles et notifications en cas :
-  - D'erreur critique détectée dans les logs.
-  - D'absence de communication d'un service au-delà de son intervalle défini.
-  - D'événements spécifiques prédéfinis.
-- Gestion des interfaces spécifiques liées aux clients avec rattachement des développements associés.
+- Interface utilisateur moderne pour visualiser l'état des services
+- Intervalles de reporting configurables
+- Alertes et notifications personnalisables
 
-### 3. Débogage et exploitation par une IA (n8n)
+### Analyse IA avec n8n
 
-- Intégration d'un agent IA (n8n) capable d'analyser les logs et de détecter des anomalies récurrentes.
-- Possibilité pour l'IA d'accéder au code source des applications mises à disposition afin d'aider au diagnostic et à la correction des erreurs.
-- Recommandations automatiques pour le débogage des applications déployées.
-- Suggestion d'optimisations ou de bonnes pratiques en fonction des erreurs détectées.
+- Détection automatique d'anomalies
+- Suggestions de solutions basées sur l'analyse des logs
+- Aide au débogage avec analyse du code source
 
-### 4. Sécurité et gestion des accès
+### Sécurité et gestion des accès
 
-- Authentification et gestion des droits utilisateurs (admin, support, client...).
-- Chiffrement des logs sensibles pour garantir la confidentialité.
-- Journalisation des accès et des actions pour assurer une traçabilité complète.
+- Authentification JWT et gestion des droits utilisateurs
+- Chiffrement des données sensibles
+- Audit et traçabilité des actions
 
-## Technologies et outils prévus
+## Architecture du projet
 
-- Back-end : ASP.NET Core MVC, Entity Framework, SQL Server
-- Front-end : Bootstrap, Vue.js/React pour une interface dynamique
-- API & Sécurité : JWT pour l'authentification, API REST
-- Monitoring & IA : n8n pour l'analyse des logs et le support au débogage
+Le projet est organisé en plusieurs couches selon les principes de la Clean Architecture :
+
+- `LogCentralPlatform.Core` : Entités, interfaces et logique métier
+- `LogCentralPlatform.Infrastructure` : Implémentation de la persistance et services externes
+- `LogCentralPlatform.Api` : API REST pour la réception des logs
+- `LogCentralPlatform.Web` : Interface utilisateur web MVC
+
+## Technologies utilisées
+
+- **Backend** : ASP.NET Core 8.0, Entity Framework Core
+- **Base de données** : SQL Server
+- **Frontend** : ASP.NET MVC, Bootstrap
+- **API** : REST, JWT pour l'authentification
+- **IA** : n8n pour l'automatisation et l'analyse
 
 ## Installation et démarrage
 
-*À venir*
+### Prérequis
 
-## Structure du projet
+- .NET 8.0 SDK
+- SQL Server (local ou distant)
+- Visual Studio 2022 ou VS Code
 
-*À venir*
+### Configuration
 
-## Contribuer
+1. Cloner le dépôt
+```bash
+git clone https://github.com/alonguetaptmed/LogCentralPlatform.git
+```
 
-*À venir*
+2. Restaurer les packages NuGet
+```bash
+dotnet restore
+```
+
+3. Configurer la base de données
+- Mettre à jour la chaîne de connexion dans les fichiers `appsettings.json`
+- Appliquer les migrations
+```bash
+cd src/LogCentralPlatform.Api
+dotnet ef database update
+```
+
+4. Configurer n8n pour l'analyse IA (optionnel)
+- Installer n8n : [https://n8n.io/](https://n8n.io/)
+- Configurer l'URL et la clé API dans `appsettings.json`
+
+### Lancement
+
+Pour lancer l'API :
+```bash
+cd src/LogCentralPlatform.Api
+dotnet run
+```
+
+Pour lancer l'interface web :
+```bash
+cd src/LogCentralPlatform.Web
+dotnet run
+```
+
+## Intégration dans les applications clientes
+
+Pour intégrer LogCentralPlatform dans une application cliente, vous pouvez utiliser le SDK client (à venir) ou effectuer des appels directs à l'API REST.
+
+Exemple d'envoi d'un log via HTTP POST :
+```csharp
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+
+// Créer l'entrée de log
+var logEntry = new 
+{
+    Timestamp = DateTime.UtcNow,
+    Level = "Error",
+    Message = "Une erreur est survenue",
+    Category = "Database",
+    StackTrace = "..."
+};
+
+// Convertir en JSON
+var content = new StringContent(
+    JsonSerializer.Serialize(logEntry),
+    Encoding.UTF8,
+    "application/json");
+
+// Envoyer à l'API
+using var client = new HttpClient();
+client.DefaultRequestHeaders.Add("X-API-Key", "votre-clé-api");
+var response = await client.PostAsync("https://votre-instance/api/logs", content);
+```
+
+## Statut du projet
+
+Ce projet est en phase de développement initial. Les fonctionnalités principales sont en cours d'implémentation.
 
 ## Licence
 
-*À définir*
+[MIT](LICENSE)
+
+## Contact
+
+Pour toute question ou suggestion, veuillez ouvrir une issue sur ce dépôt GitHub.

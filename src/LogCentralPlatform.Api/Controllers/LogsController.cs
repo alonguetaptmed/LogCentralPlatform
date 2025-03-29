@@ -121,7 +121,7 @@ namespace LogCentralPlatform.Api.Controllers
                 var createdLog = await _logRepository.AddAsync(logEntry);
 
                 // Lancement d'une analyse AI asynchrone si log d'erreur ou critique
-                if (createLogRequest.Level >= LogLevel.Error)
+                if (createLogRequest.Level >= Core.Entities.LogLevel.Error)
                 {
                     // Lancement en arrière-plan pour ne pas bloquer la réponse API
                     _ = Task.Run(async () =>

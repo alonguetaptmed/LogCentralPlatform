@@ -2,28 +2,26 @@
 @{
     ViewData["Title"] = "Détails du log";
     
-    string GetHeaderClass(LogLevel level)
+    string GetHeaderClass(string level)
     {
-        return level switch
+        return level?.ToLower() switch
         {
-            LogLevel.Error => "header-error",
-            LogLevel.Critical => "header-critical",
-            LogLevel.Warning => "header-warning",
-            LogLevel.Information => "header-info",
+            "error" or "critical" or "fatal" => "header-error",
+            "warning" => "header-warning",
+            "information" or "info" => "header-info",
             _ => ""
         };
     }
     
-    string GetLevelIcon(LogLevel level)
+    string GetLevelIcon(string level)
     {
-        return level switch
+        return level?.ToLower() switch
         {
-            LogLevel.Error => "bi-exclamation-triangle-fill",
-            LogLevel.Critical => "bi-exclamation-octagon-fill",
-            LogLevel.Warning => "bi-exclamation-circle-fill",
-            LogLevel.Information => "bi-info-circle-fill",
-            LogLevel.Debug => "bi-bug",
-            LogLevel.Trace => "bi-activity",
+            "error" or "critical" or "fatal" => "bi-exclamation-triangle-fill",
+            "warning" => "bi-exclamation-circle-fill",
+            "information" or "info" => "bi-info-circle-fill",
+            "debug" => "bi-bug",
+            "trace" => "bi-activity",
             _ => "bi-info-circle"
         };
     }
@@ -48,7 +46,7 @@
                     </h5>
                     <div>
                         <span class="badge bg-light text-dark" data-bs-toggle="tooltip" title="Date et heure de l'événement">
-                            <i class="bi bi-clock me-1"></i> @Model.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")
+                            <i class="bi bi-clock me-1"></i> @Model.FormattedTimestamp
                         </span>
                     </div>
                 </div>
@@ -58,10 +56,13 @@
                             <span data-bs-toggle="tooltip" title="Service concerné">
                                 <i class="bi bi-gear me-1"></i> @Model.ServiceName
                             </span>
-                            <span class="mx-2">|</span>
-                            <span data-bs-toggle="tooltip" title="Version du service">
-                                <i class="bi bi-tag me-1"></i> @Model.ServiceVersion
-                            </span>
+                            @if (!string.IsNullOrEmpty(Model.ServiceVersion))
+                            {
+                                <span class="mx-2">|</span>
+                                <span data-bs-toggle="tooltip" title="Version du service">
+                                    <i class="bi bi-tag me-1"></i> @Model.ServiceVersion
+                                </span>
+                            }
                         </h6>
                         <div>
                             <button class="btn btn-sm btn-outline-secondary" onclick="copyToClipboard('@Model.Id', this)">
@@ -71,19 +72,6 @@
                     </div>
                     
                     <h5 class="card-title mb-4 p-2 bg-light rounded">@Model.Message</h5>
-
-                    @if (!string.IsNullOrEmpty(Model.ExceptionDetails))
-                    {
-                        <div class="mt-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6><i class="bi bi-exclamation-circle me-1"></i> Détails de l'exception</h6>
-                                <button class="btn btn-sm btn-outline-secondary toggle-exception" data-target="exceptionDetails">
-                                    <i class="bi bi-chevron-down"></i> Afficher les détails
-                                </button>
-                            </div>
-                            <pre id="exceptionDetails" class="bg-light p-3 rounded d-none"><code>@Model.ExceptionDetails</code></pre>
-                        </div>
-                    }
 
                     @if (!string.IsNullOrEmpty(Model.StackTrace))
                     {
@@ -109,32 +97,38 @@
                     <h6>Logs similaires</h6>
                     <p class="text-muted small">Logs présentant des caractéristiques semblables (même service ou même erreur)</p>
                     
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Service</th>
-                                    <th>Message</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>28/03/2025 14:32</td>
-                                    <td>@Model.ServiceName</td>
-                                    <td class="text-truncate" style="max-width: 300px;">@Model.Message</td>
-                                    <td><a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>27/03/2025 09:15</td>
-                                    <td>@Model.ServiceName</td>
-                                    <td class="text-truncate" style="max-width: 300px;">@Model.Message</td>
-                                    <td><a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    @if (Model.RelatedLogs.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Niveau</th>
+                                        <th>Message</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model.RelatedLogs)
+                                    {
+                                        <tr>
+                                            <td>@log.Timestamp.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td><span class="log-level log-level-@log.Level.ToLower()">@log.Level</span></td>
+                                            <td class="text-truncate" style="max-width: 300px;">@log.Message</td>
+                                            <td><a asp-action="LogDetails" asp-route-id="@log.Id" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-light">
+                            Aucun log similaire trouvé.
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -152,45 +146,71 @@
                         <dt class="col-sm-5">Service</dt>
                         <dd class="col-sm-7">@Model.ServiceName</dd>
                         
-                        <dt class="col-sm-5">Version</dt>
-                        <dd class="col-sm-7">@Model.ServiceVersion</dd>
-                        
-                        <dt class="col-sm-5">Environnement</dt>
-                        <dd class="col-sm-7"><span class="badge bg-info">@Model.Environment</span></dd>
+                        @if (!string.IsNullOrEmpty(Model.ServiceVersion))
+                        {
+                            <dt class="col-sm-5">Version</dt>
+                            <dd class="col-sm-7">@Model.ServiceVersion</dd>
+                        }
                         
                         <dt class="col-sm-5">Client</dt>
-                        <dd class="col-sm-7">@(Model.ClientName ?? "N/A")</dd>
+                        <dd class="col-sm-7">@Model.ClientName</dd>
                         
-                        <dt class="col-sm-5">Catégorie</dt>
-                        <dd class="col-sm-7">@Model.Category</dd>
+                        @if (!string.IsNullOrEmpty(Model.Category))
+                        {
+                            <dt class="col-sm-5">Catégorie</dt>
+                            <dd class="col-sm-7">@Model.Category</dd>
+                        }
                         
                         <dt class="col-sm-5">Horodatage</dt>
                         <dd class="col-sm-7">@Model.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")</dd>
                         
-                        <dt class="col-sm-5">Reçu le</dt>
-                        <dd class="col-sm-7">@Model.ReceivedAt.ToString("dd/MM/yyyy HH:mm:ss")</dd>
+                        @if (!string.IsNullOrEmpty(Model.MachineName))
+                        {
+                            <dt class="col-sm-5">Machine</dt>
+                            <dd class="col-sm-7">@Model.MachineName</dd>
+                        }
+                        
+                        @if (!string.IsNullOrEmpty(Model.RequestId))
+                        {
+                            <dt class="col-sm-5">ID Requête</dt>
+                            <dd class="col-sm-7"><code>@Model.RequestId</code></dd>
+                        }
                     </dl>
                 </div>
             </div>
 
-            @if (Model.AnalyzedByAI)
+            @if (Model.AnalysisResults.Any())
             {
                 <div class="card mb-4">
                     <div class="card-header bg-info text-white">
                         <h5 class="mb-0"><i class="bi bi-robot me-2"></i>Analyse IA</h5>
                     </div>
                     <div class="card-body">
-                        <div class="alert alert-info">
-                            <i class="bi bi-lightbulb me-2"></i>
-                            @Model.AIAnalysisResult
-                        </div>
-                        
-                        <div class="d-flex justify-content-between mt-3">
-                            <span class="text-muted small">Analysé le @DateTime.Now.AddHours(-2).ToString("dd/MM/yyyy HH:mm")</span>
-                            <button class="btn btn-sm btn-outline-info">
-                                <i class="bi bi-arrow-clockwise me-1"></i> Ré-analyser
-                            </button>
-                        </div>
+                        @foreach (var analysis in Model.AnalysisResults)
+                        {
+                            <div class="alert alert-info">
+                                <i class="bi bi-lightbulb me-2"></i>
+                                @analysis.Result
+                            </div>
+                            
+                            @if (analysis.SuggestedActions.Any())
+                            {
+                                <h6>Actions suggérées :</h6>
+                                <ul>
+                                    @foreach (var action in analysis.SuggestedActions)
+                                    {
+                                        <li>@action</li>
+                                    }
+                                </ul>
+                            }
+                            
+                            <div class="d-flex justify-content-between mt-3">
+                                <span class="text-muted small">Analysé le @analysis.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                                <button class="btn btn-sm btn-outline-info">
+                                    <i class="bi bi-arrow-clockwise me-1"></i> Ré-analyser
+                                </button>
+                            </div>
+                        }
                     </div>
                 </div>
             }
@@ -249,10 +269,35 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Highlight code blocks
-            document.querySelectorAll('pre code').forEach(block => {
-                block.classList.add('text-wrap');
+            // Toggle stack trace and exception details
+            document.querySelectorAll('.toggle-exception').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+                    const icon = this.querySelector('i');
+                    
+                    if (targetElement.classList.contains('d-none')) {
+                        targetElement.classList.remove('d-none');
+                        icon.classList.replace('bi-chevron-down', 'bi-chevron-up');
+                        this.innerHTML = this.innerHTML.replace('Afficher', 'Masquer');
+                    } else {
+                        targetElement.classList.add('d-none');
+                        icon.classList.replace('bi-chevron-up', 'bi-chevron-down');
+                        this.innerHTML = this.innerHTML.replace('Masquer', 'Afficher');
+                    }
+                });
             });
+            
+            // Copy to clipboard function
+            window.copyToClipboard = function(text, button) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i class="bi bi-check me-1"></i> Copié';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                    }, 2000);
+                });
+            };
         });
     </script>
 }

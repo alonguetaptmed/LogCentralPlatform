@@ -1,0 +1,494 @@
+@model SettingsViewModel
+@{
+    ViewData["Title"] = "Paramètres de l'application";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1><i class="bi bi-gear-fill me-2"></i>Paramètres</h1>
+        <p class="text-muted">Configuration de l'application et des intégrations</p>
+    </div>
+    <div>
+        <button type="button" id="saveAllBtn" class="btn btn-primary">
+            <i class="bi bi-save me-1"></i> Enregistrer tout
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush" id="settings-tabs" role="tablist">
+                    <a class="list-group-item list-group-item-action active" id="general-tab" data-bs-toggle="list" href="#general" role="tab">
+                        <i class="bi bi-gear me-2"></i> Général
+                    </a>
+                    <a class="list-group-item list-group-item-action" id="ai-tab" data-bs-toggle="list" href="#ai" role="tab">
+                        <i class="bi bi-robot me-2"></i> IA & Analyse
+                    </a>
+                    <a class="list-group-item list-group-item-action" id="notifications-tab" data-bs-toggle="list" href="#notifications" role="tab">
+                        <i class="bi bi-bell me-2"></i> Notifications
+                    </a>
+                    <a class="list-group-item list-group-item-action" id="integration-tab" data-bs-toggle="list" href="#integration" role="tab">
+                        <i class="bi bi-box-arrow-in-down me-2"></i> Intégrations
+                    </a>
+                    <a class="list-group-item list-group-item-action" id="security-tab" data-bs-toggle="list" href="#security" role="tab">
+                        <i class="bi bi-shield-lock me-2"></i> Sécurité
+                    </a>
+                    <a class="list-group-item list-group-item-action" id="backup-tab" data-bs-toggle="list" href="#backup" role="tab">
+                        <i class="bi bi-cloud-arrow-up me-2"></i> Sauvegardes
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informations</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted mb-1">Version de l'application</p>
+                <p class="fw-medium mb-3">@Model.ApplicationVersion</p>
+                
+                <p class="small text-muted mb-1">Dernière mise à jour</p>
+                <p class="fw-medium mb-3">@Model.LastUpdateDate.ToString("dd/MM/yyyy HH:mm")</p>
+                
+                <p class="small text-muted mb-1">Nombre de services</p>
+                <p class="fw-medium mb-3">@Model.TotalServices</p>
+                
+                <p class="small text-muted mb-1">Nombre de logs</p>
+                <p class="fw-medium mb-0">@Model.TotalLogs</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="tab-content">
+            <!-- Onglet Général -->
+            <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Paramètres généraux</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="generalForm">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nom de l'application</label>
+                                    <input type="text" class="form-control" name="ApplicationName" value="@Model.ApplicationName" />
+                                    <div class="form-text">Nom affiché dans les titres et notifications</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">URL de l'application</label>
+                                    <input type="url" class="form-control" name="ApplicationUrl" value="@Model.ApplicationUrl" />
+                                    <div class="form-text">URL complète de l'application (pour les liens dans les emails)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Email administrateur</label>
+                                    <input type="email" class="form-control" name="AdminEmail" value="@Model.AdminEmail" />
+                                    <div class="form-text">Utilisé pour les notifications système</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Fuseau horaire</label>
+                                    <select class="form-select" name="TimeZone">
+                                        <option value="UTC" selected="@(Model.TimeZone == "UTC")">UTC</option>
+                                        <option value="Europe/Paris" selected="@(Model.TimeZone == "Europe/Paris")">Europe/Paris (UTC+1/+2)</option>
+                                        <option value="America/New_York" selected="@(Model.TimeZone == "America/New_York")">America/New York (UTC-5/-4)</option>
+                                    </select>
+                                    <div class="form-text">Les dates et heures seront affichées dans ce fuseau horaire</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Rétention des logs (jours)</label>
+                                    <input type="number" class="form-control" name="LogRetentionDays" value="@Model.LogRetentionDays" min="1" max="3650" />
+                                    <div class="form-text">Les logs plus anciens seront automatiquement supprimés</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Taille maximale des logs (Mo)</label>
+                                    <input type="number" class="form-control" name="MaxLogSizeMB" value="@Model.MaxLogSizeMB" min="1" max="100" />
+                                    <div class="form-text">Taille maximale d'un seul log en mégaoctets</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="enableMaintenanceMode" name="MaintenanceModeEnabled" @(Model.MaintenanceModeEnabled ? "checked" : "") />
+                                    <label class="form-check-label" for="enableMaintenanceMode">Activer le mode maintenance</label>
+                                </div>
+                                <div class="form-text">Si activé, l'application affichera une page de maintenance à tous les utilisateurs</div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-1"></i> Enregistrer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Onglet IA & Analyse -->
+            <div class="tab-pane fade" id="ai" role="tabpanel" aria-labelledby="ai-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-robot me-2"></i>Paramètres d'IA et d'analyse</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="aiForm">
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="enableAI" name="AIEnabled" @(Model.AISettings.Enabled ? "checked" : "") />
+                                    <label class="form-check-label" for="enableAI">Activer l'analyse IA</label>
+                                </div>
+                                <div class="form-text">Activer/désactiver l'analyse automatique des logs par IA</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">URL de l'API n8n</label>
+                                <input type="url" class="form-control" name="N8nApiUrl" value="@Model.AISettings.N8nApiUrl" />
+                                <div class="form-text">URL du webhook n8n utilisé pour l'analyse</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Clé API n8n</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="n8nApiKey" name="N8nApiKey" value="@Model.AISettings.N8nApiKey" />
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('n8nApiKey')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="form-text">Clé d'authentification pour l'API n8n</div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Intervalle d'analyse (minutes)</label>
+                                    <input type="number" class="form-control" name="AnalysisInterval" value="@Model.AISettings.AnalysisInterval" min="1" max="1440" />
+                                    <div class="form-text">Fréquence d'exécution de l'analyse automatique</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Nombre max. d'analyses simultanées</label>
+                                    <input type="number" class="form-control" name="MaxConcurrentAnalyses" value="@Model.AISettings.MaxConcurrentAnalyses" min="1" max="20" />
+                                    <div class="form-text">Limite le nombre d'analyses simultanées pour préserver les performances</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Types de logs à analyser</label>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="analyzeCritical" name="AnalyzeCritical" @(Model.AISettings.AnalyzeCritical ? "checked" : "") />
+                                            <label class="form-check-label" for="analyzeCritical">Critiques</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="analyzeError" name="AnalyzeError" @(Model.AISettings.AnalyzeError ? "checked" : "") />
+                                            <label class="form-check-label" for="analyzeError">Erreurs</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="analyzeWarning" name="AnalyzeWarning" @(Model.AISettings.AnalyzeWarning ? "checked" : "") />
+                                            <label class="form-check-label" for="analyzeWarning">Avertissements</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="analyzeInfo" name="AnalyzeInfo" @(Model.AISettings.AnalyzeInfo ? "checked" : "") />
+                                            <label class="form-check-label" for="analyzeInfo">Informations</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>Note:</strong> L'intégration n8n nécessite d'être configurée séparément dans n8n. 
+                                Consultez la <a href="/docs/integration/n8n" target="_blank">documentation d'intégration</a> pour plus d'informations.
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#testAIModal">
+                                    <i class="bi bi-lightning me-1"></i> Tester la connexion
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-1"></i> Enregistrer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Autres onglets (Notifications, Intégrations, Sécurité, Sauvegardes) -->
+            <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-bell me-2"></i>Paramètres de notifications</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="notificationsForm">
+                            <!-- Contenu du formulaire de notifications -->
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="enableEmailNotifications" name="EmailNotificationsEnabled" @(Model.NotificationSettings.EmailEnabled ? "checked" : "") />
+                                    <label class="form-check-label" for="enableEmailNotifications">Activer les notifications par email</label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Configuration SMTP</label>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="SmtpServer" placeholder="Serveur SMTP" value="@Model.NotificationSettings.SmtpServer" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number" class="form-control" name="SmtpPort" placeholder="Port" value="@Model.NotificationSettings.SmtpPort" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" name="SmtpSecurity">
+                                            <option value="None" selected="@(Model.NotificationSettings.SmtpSecurity == "None")">Aucun</option>
+                                            <option value="SSL" selected="@(Model.NotificationSettings.SmtpSecurity == "SSL")">SSL</option>
+                                            <option value="TLS" selected="@(Model.NotificationSettings.SmtpSecurity == "TLS")">TLS</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="SmtpUsername" placeholder="Nom d'utilisateur" value="@Model.NotificationSettings.SmtpUsername" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="password" class="form-control" name="SmtpPassword" placeholder="Mot de passe" value="@Model.NotificationSettings.SmtpPassword" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Email expéditeur</label>
+                                <input type="email" class="form-control" name="SenderEmail" value="@Model.NotificationSettings.SenderEmail" />
+                                <div class="form-text">Adresse utilisée comme expéditeur pour les emails envoyés</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Fréquence des notifications récapitulatives</label>
+                                <select class="form-select" name="DigestFrequency">
+                                    <option value="None" selected="@(Model.NotificationSettings.DigestFrequency == "None")">Aucune</option>
+                                    <option value="Daily" selected="@(Model.NotificationSettings.DigestFrequency == "Daily")">Quotidienne</option>
+                                    <option value="Weekly" selected="@(Model.NotificationSettings.DigestFrequency == "Weekly")">Hebdomadaire</option>
+                                    <option value="Monthly" selected="@(Model.NotificationSettings.DigestFrequency == "Monthly")">Mensuelle</option>
+                                </select>
+                                <div class="form-text">Fréquence d'envoi des récapitulatifs de logs et erreurs</div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-outline-primary" id="testEmailBtn">
+                                    <i class="bi bi-envelope me-1"></i> Envoyer un email de test
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-1"></i> Enregistrer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Les autres onglets seraient similaires mais avec des contenus différents -->
+            <div class="tab-pane fade" id="integration" role="tabpanel" aria-labelledby="integration-tab">
+                <!-- Contenu de l'onglet Intégrations -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-box-arrow-in-down me-2"></i>Intégrations</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Configuration des intégrations avec d'autres services.</p>
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Cette page sera disponible dans une prochaine mise à jour.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
+                <!-- Contenu de l'onglet Sécurité -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Sécurité</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Paramètres de sécurité de l'application.</p>
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Cette page sera disponible dans une prochaine mise à jour.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-pane fade" id="backup" role="tabpanel" aria-labelledby="backup-tab">
+                <!-- Contenu de l'onglet Sauvegardes -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-cloud-arrow-up me-2"></i>Sauvegardes</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Configuration des sauvegardes et restauration.</p>
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Cette page sera disponible dans une prochaine mise à jour.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de test de connexion IA -->
+<div class="modal fade" id="testAIModal" tabindex="-1" aria-labelledby="testAIModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="testAIModalLabel"><i class="bi bi-lightning me-2"></i>Test de connexion n8n</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="testAILoading" class="text-center py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                    <p class="mt-3">Test de connexion en cours...</p>
+                </div>
+                <div id="testAISuccess" class="d-none">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-check-circle text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <div class="alert alert-success">
+                        <strong>Connexion réussie!</strong> La configuration n8n fonctionne correctement.
+                    </div>
+                    <p>Détails de la réponse:</p>
+                    <pre class="bg-light p-3 rounded"><code id="testAISuccessDetails"></code></pre>
+                </div>
+                <div id="testAIError" class="d-none">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-x-circle text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    <div class="alert alert-danger">
+                        <strong>Échec de la connexion!</strong> Veuillez vérifier vos paramètres.
+                    </div>
+                    <p>Détails de l'erreur:</p>
+                    <pre class="bg-light p-3 rounded"><code id="testAIErrorDetails"></code></pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" id="retryAIBtn">
+                    <i class="bi bi-arrow-clockwise me-1"></i> Réessayer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Fonction pour afficher/masquer les mots de passe
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = event.currentTarget.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                input.type = 'password';
+                eyeIcon.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        }
+        
+        // Soumission du formulaire général
+        document.getElementById('generalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simuler la sauvegarde (à implémenter avec AJAX dans un environnement réel)
+            showToast('Paramètres généraux enregistrés avec succès!', 'success');
+        });
+        
+        // Soumission du formulaire IA
+        document.getElementById('aiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simuler la sauvegarde (à implémenter avec AJAX dans un environnement réel)
+            showToast('Paramètres d\'IA enregistrés avec succès!', 'success');
+        });
+        
+        // Soumission du formulaire notifications
+        document.getElementById('notificationsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simuler la sauvegarde (à implémenter avec AJAX dans un environnement réel)
+            showToast('Paramètres de notifications enregistrés avec succès!', 'success');
+        });
+        
+        // Bouton pour enregistrer tous les formulaires
+        document.getElementById('saveAllBtn').addEventListener('click', function() {
+            // Simuler la sauvegarde de tous les formulaires
+            showToast('Tous les paramètres ont été enregistrés avec succès!', 'success');
+        });
+        
+        // Test de l'email
+        document.getElementById('testEmailBtn').addEventListener('click', function() {
+            // Simuler l'envoi d'un email de test
+            showToast('Email de test envoyé avec succès!', 'info');
+        });
+        
+        // Test de connexion n8n
+        document.getElementById('retryAIBtn').addEventListener('click', function() {
+            testAIConnection();
+        });
+        
+        function testAIConnection() {
+            // Réinitialiser l'affichage
+            document.getElementById('testAILoading').classList.remove('d-none');
+            document.getElementById('testAISuccess').classList.add('d-none');
+            document.getElementById('testAIError').classList.add('d-none');
+            
+            // Simuler une requête asynchrone (à remplacer par une requête AJAX réelle)
+            setTimeout(function() {
+                document.getElementById('testAILoading').classList.add('d-none');
+                
+                // Simuler le succès ou l'échec aléatoirement pour la démonstration
+                if (Math.random() > 0.5) {
+                    document.getElementById('testAISuccess').classList.remove('d-none');
+                    document.getElementById('testAISuccessDetails').textContent = JSON.stringify({
+                        status: "success",
+                        message: "Connection established successfully",
+                        version: "1.0.5"
+                    }, null, 2);
+                } else {
+                    document.getElementById('testAIError').classList.remove('d-none');
+                    document.getElementById('testAIErrorDetails').textContent = JSON.stringify({
+                        status: "error",
+                        message: "Failed to connect to n8n API",
+                        error: "Connection timeout"
+                    }, null, 2);
+                }
+            }, 1500);
+        }
+        
+        // Fonction pour afficher un toast
+        function showToast(message, type) {
+            // Cette fonction serait implémentée avec un plugin de toast dans un environnement réel
+            alert(message);
+        }
+        
+        // Appelé lorsque le modal de test IA est affiché
+        $('#testAIModal').on('shown.bs.modal', function() {
+            testAIConnection();
+        });
+    </script>
+}

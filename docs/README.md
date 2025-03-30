@@ -14,6 +14,8 @@ Bienvenue dans la documentation officielle de LogCentralPlatform, une solution c
 8. [Intégration n8n](#intégration-n8n)
 9. [Développement](#développement)
    - [Structure du code](#structure-du-code)
+   - [Guide de développement](development/GUIDE_DEVELOPPEMENT.md)
+   - [Référence des ViewModels](development/REFERENCE_VIEWMODELS.md)
    - [Résolution des erreurs de build](development/RESOLUTION_ERREURS_BUILD.md)
    - [Contribution](#contribution)
 10. [FAQ](#faq)
@@ -79,7 +81,7 @@ Interface utilisateur pour la visualisation et la gestion des logs.
 ```
 LogCentralPlatform.Web/
 ├── Controllers/        # Contrôleurs MVC
-├── Models/             # ViewModels
+├── ViewModels/         # ViewModels pour les vues
 └── Views/              # Vues Razor
 ```
 
@@ -304,6 +306,10 @@ Le projet suit les principes SOLID et utilise une architecture en couches :
 - **API** : Points d'entrée REST
 - **Web** : Interface utilisateur
 
+### Modèles de vue (ViewModels)
+
+Pour développer et modifier des vues, consultez notre [Référence des ViewModels](development/REFERENCE_VIEWMODELS.md) qui détaille tous les modèles de vue utilisés dans l'application Web.
+
 ### Résolution des problèmes courants
 
 Si vous rencontrez des erreurs lors de la construction ou de l'exécution du projet, consultez notre [guide de résolution des erreurs de build](development/RESOLUTION_ERREURS_BUILD.md) qui contient des solutions aux problèmes les plus fréquents.
@@ -336,4 +342,4 @@ R: Nous utilisons n8n pour orchestrer l'analyse des logs. Les workflows analysen
 
 ---
 
-Dernière mise à jour: 29 mars 2025
+Dernière mise à jour: 30 mars 2025

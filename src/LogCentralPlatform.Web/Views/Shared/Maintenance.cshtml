@@ -1,0 +1,86 @@
+@model MaintenanceViewModel
+@{
+    ViewData["Title"] = "Maintenance en cours";
+    Layout = "_LayoutMinimal"; // Layout minimal sans navigation
+}
+
+<div class="maintenance-page">
+    <div class="container text-center py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <img src="~/images/maintenance.svg" alt="Maintenance en cours" class="img-fluid mb-4" style="max-height: 250px;" />
+                
+                <h1 class="display-4 mb-3">Maintenance en cours</h1>
+                
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <p class="lead">Nous mettons actuellement à jour notre plateforme pour améliorer votre expérience.</p>
+                        
+                        @if (Model.EstimatedCompletionTime.HasValue)
+                        {
+                            <p>La maintenance devrait être terminée le <strong>@Model.EstimatedCompletionTime.Value.ToString("dd/MM/yyyy à HH:mm")</strong>.</p>
+                        }
+                        
+                        @if (!string.IsNullOrEmpty(Model.MaintenanceMessage))
+                        {
+                            <div class="alert alert-info mt-3">
+                                <i class="bi bi-info-circle me-2"></i>
+                                @Model.MaintenanceMessage
+                            </div>
+                        }
+                    </div>
+                </div>
+                
+                @if (Model.ShowAdminLoginLink && !string.IsNullOrEmpty(Model.AdminLoginUrl))
+                {
+                    <div>
+                        <a href="@Model.AdminLoginUrl" class="btn btn-outline-primary">
+                            <i class="bi bi-shield-lock me-1"></i> Connexion administrateur
+                        </a>
+                    </div>
+                }
+                
+                <div class="mt-5">
+                    <p class="text-muted mb-1">Pour toute question urgente, veuillez nous contacter :</p>
+                    <p>
+                        <a href="mailto:@(Model.ContactEmail ?? "support@logcentralplatform.com")" class="text-decoration-none">
+                            <i class="bi bi-envelope me-1"></i> @(Model.ContactEmail ?? "support@logcentralplatform.com")
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="mt-4">
+                    <button id="refreshBtn" class="btn btn-primary">
+                        <i class="bi bi-arrow-clockwise me-1"></i> Actualiser la page
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        body {
+            background-color: var(--body-bg);
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .maintenance-page {
+            width: 100%;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            location.reload();
+        });
+    </script>
+}

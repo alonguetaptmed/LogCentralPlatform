@@ -8,18 +8,39 @@
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <p class="card-text text-muted mb-1">@stat.Label</p>
+                            <p class="card-text text-muted mb-1">@stat.Title</p>
                             <h3 class="card-title stat-value mb-0">@stat.Value</h3>
                         </div>
-                        <div class="stat-icon text-@stat.IconColor">
-                            <i class="bi bi-@stat.IconName"></i>
+                        <div class="stat-icon text-@stat.Color">
+                            <i class="bi bi-@stat.Icon"></i>
                         </div>
                     </div>
-                    @if (!string.IsNullOrEmpty(stat.ChangeText))
+                    @if (!string.IsNullOrEmpty(stat.TrendValue))
                     {
                         <div class="mt-3">
-                            <span class="badge bg-@(stat.IsPositiveChange ? "success" : "danger")">@stat.ChangeText</span>
-                            <small class="text-muted ms-2">@stat.ChangeDescription</small>
+                            <span class="badge bg-@(stat.Trend == "up" ? "success" : stat.Trend == "down" ? "danger" : "secondary")">
+                                @if (stat.Trend == "up")
+                                {
+                                    <i class="bi bi-arrow-up-short"></i>
+                                }
+                                else if (stat.Trend == "down")
+                                {
+                                    <i class="bi bi-arrow-down-short"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-dash"></i>
+                                }
+                                @stat.TrendValue
+                            </span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(stat.Link))
+                    {
+                        <div class="mt-3 text-end">
+                            <a href="@stat.Link" class="btn btn-sm btn-link p-0">
+                                Détails <i class="bi bi-arrow-right"></i>
+                            </a>
                         </div>
                     }
                 </div>

@@ -1,86 +1,141 @@
-@model MaintenanceViewModel
 @{
-    ViewData["Title"] = "Maintenance en cours";
-    Layout = "_LayoutMinimal"; // Layout minimal sans navigation
+    Layout = null;
 }
 
-<div class="maintenance-page">
-    <div class="container text-center py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <img src="~/images/maintenance.svg" alt="Maintenance en cours" class="img-fluid mb-4" style="max-height: 250px;" />
-                
-                <h1 class="display-4 mb-3">Maintenance en cours</h1>
-                
-                <div class="card mb-4">
-                    <div class="card-body p-4">
-                        <p class="lead">Nous mettons actuellement à jour notre plateforme pour améliorer votre expérience.</p>
-                        
-                        @if (Model.EstimatedCompletionTime.HasValue)
-                        {
-                            <p>La maintenance devrait être terminée le <strong>@Model.EstimatedCompletionTime.Value.ToString("dd/MM/yyyy à HH:mm")</strong>.</p>
-                        }
-                        
-                        @if (!string.IsNullOrEmpty(Model.MaintenanceMessage))
-                        {
-                            <div class="alert alert-info mt-3">
-                                <i class="bi bi-info-circle me-2"></i>
-                                @Model.MaintenanceMessage
-                            </div>
-                        }
-                    </div>
-                </div>
-                
-                @if (Model.ShowAdminLoginLink && !string.IsNullOrEmpty(Model.AdminLoginUrl))
-                {
-                    <div>
-                        <a href="@Model.AdminLoginUrl" class="btn btn-outline-primary">
-                            <i class="bi bi-shield-lock me-1"></i> Connexion administrateur
-                        </a>
-                    </div>
-                }
-                
-                <div class="mt-5">
-                    <p class="text-muted mb-1">Pour toute question urgente, veuillez nous contacter :</p>
-                    <p>
-                        <a href="mailto:@(Model.ContactEmail ?? "support@logcentralplatform.com")" class="text-decoration-none">
-                            <i class="bi bi-envelope me-1"></i> @(Model.ContactEmail ?? "support@logcentralplatform.com")
-                        </a>
-                    </p>
-                </div>
-                
-                <div class="mt-4">
-                    <button id="refreshBtn" class="btn btn-primary">
-                        <i class="bi bi-arrow-clockwise me-1"></i> Actualiser la page
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Styles {
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maintenance en cours - LogCentralPlatform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
+        :root {
+            --primary: #3b71ca;
+            --primary-dark: #2e5ba9;
+            --primary-light: #6394e2;
+            --body-bg: #f9f9fa;
+            --card-bg: #ffffff;
+            --font-main: 'Roboto', 'Segoe UI', sans-serif;
+        }
+        
         body {
+            font-family: var(--font-main);
             background-color: var(--body-bg);
-            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #212529;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            padding: 2rem;
         }
         
-        .maintenance-page {
-            width: 100%;
+        .maintenance-container {
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        .maintenance-logo {
+            margin-bottom: 2rem;
+        }
+        
+        .maintenance-icon {
+            font-size: 5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .maintenance-card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            margin: 2rem 0;
+        }
+        
+        .refresh-text {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 1rem;
+        }
+        
+        .contact-info {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        /* Animation */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .rotating {
+            animation: rotate 4s linear infinite;
+            display: inline-block;
         }
     </style>
-}
-
-@section Scripts {
+</head>
+<body>
+    <div class="maintenance-container">
+        <div class="maintenance-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="50" viewBox="0 0 200 50" fill="none">
+              <path d="M20 10H30V40H20V10Z" fill="#3B71CA"/>
+              <path d="M34 15H44V40H34V15Z" fill="#54B4D3"/>
+              <path d="M48 20H58V40H48V20Z" fill="#6C757D"/>
+              <path d="M62 25H72V40H62V25Z" fill="#3B71CA"/>
+              <path d="M76 15H86V40H76V15Z" fill="#F93154"/>
+              <path d="M90 10H100V40H90V10Z" fill="#3B71CA"/>
+              <text x="110" y="30" font-family="Arial, sans-serif" font-weight="bold" font-size="16" fill="#212529">LogCentralPlatform</text>
+            </svg>
+        </div>
+        
+        <div class="maintenance-card">
+            <div class="maintenance-icon rotating">
+                <i class="bi bi-gear"></i>
+            </div>
+            
+            <h1 class="display-5 mb-4">Maintenance en cours</h1>
+            
+            <p class="lead mb-4">
+                Nous effectuons actuellement une maintenance programmée pour améliorer notre service.
+                Nous serons de retour dès que possible.
+            </p>
+            
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+            
+            <p class="mb-0">Maintenance prévue: <strong>30 mars 2025, 12:00 - 14:00</strong></p>
+            
+            <p class="refresh-text">
+                Cette page se rafraîchira automatiquement toutes les 60 secondes.
+            </p>
+        </div>
+        
+        <div class="contact-info">
+            <p>Si vous avez besoin d'une assistance immédiate, veuillez contacter notre équipe technique :</p>
+            <a href="mailto:support@logcentralplatform.com" class="btn btn-outline-primary">
+                <i class="bi bi-envelope me-1"></i> support@logcentralplatform.com
+            </a>
+        </div>
+    </div>
+    
     <script>
-        document.getElementById('refreshBtn').addEventListener('click', function() {
-            location.reload();
-        });
+        // Reload the page every 60 seconds
+        setTimeout(function() {
+            window.location.reload();
+        }, 60000);
     </script>
-}
+</body>
+</html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .gear {
+      animation: rotate 10s linear infinite;
+      transform-origin: center;
+    }
+    .gear-alt {
+      animation: rotate-reverse 8s linear infinite;
+      transform-origin: center;
+    }
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes rotate-reverse {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+  </style>
+  <g>
+    <!-- Background Circle -->
+    <circle cx="200" cy="150" r="120" fill="#f8f9fa" />
+    
+    <!-- Server/Computer -->
+    <rect x="160" y="120" width="80" height="100" rx="4" fill="#3b71ca" />
+    <rect x="170" y="130" width="60" height="10" rx="2" fill="#ffffff" />
+    <rect x="170" y="150" width="60" height="10" rx="2" fill="#ffffff" />
+    <rect x="170" y="170" width="60" height="10" rx="2" fill="#ffffff" />
+    <rect x="170" y="190" width="60" height="10" rx="2" fill="#ffffff" />
+    
+    <!-- Large gear -->
+    <g class="gear">
+      <circle cx="280" cy="110" r="40" fill="#6c757d" />
+      <circle cx="280" cy="110" r="20" fill="#f8f9fa" />
+      
+      <!-- Gear teeth -->
+      <rect x="275" y="60" width="10" height="20" fill="#6c757d" />
+      <rect x="275" y="140" width="10" height="20" fill="#6c757d" />
+      <rect x="230" y="105" width="20" height="10" fill="#6c757d" />
+      <rect x="310" y="105" width="20" height="10" fill="#6c757d" />
+      
+      <!-- Diagonal teeth -->
+      <rect x="245" y="75" width="20" height="10" transform="rotate(-45 245 75)" fill="#6c757d" />
+      <rect x="295" y="125" width="20" height="10" transform="rotate(-45 295 125)" fill="#6c757d" />
+      <rect x="245" y="125" width="20" height="10" transform="rotate(45 245 125)" fill="#6c757d" />
+      <rect x="295" y="75" width="20" height="10" transform="rotate(45 295 75)" fill="#6c757d" />
+    </g>
+    
+    <!-- Small gear -->
+    <g class="gear-alt">
+      <circle cx="120" cy="180" r="30" fill="#f93154" />
+      <circle cx="120" cy="180" r="15" fill="#f8f9fa" />
+      
+      <!-- Gear teeth -->
+      <rect x="116" y="140" width="8" height="15" fill="#f93154" />
+      <rect x="116" y="205" width="8" height="15" fill="#f93154" />
+      <rect x="80" y="176" width="15" height="8" fill="#f93154" />
+      <rect x="145" y="176" width="15" height="8" fill="#f93154" />
+      
+      <!-- Diagonal teeth -->
+      <rect x="92" y="152" width="15" height="8" transform="rotate(-45 92 152)" fill="#f93154" />
+      <rect x="133" y="193" width="15" height="8" transform="rotate(-45 133 193)" fill="#f93154" />
+      <rect x="92" y="193" width="15" height="8" transform="rotate(45 92 193)" fill="#f93154" />
+      <rect x="133" y="152" width="15" height="8" transform="rotate(45 133 152)" fill="#f93154" />
+    </g>
+    
+    <!-- Wrench -->
+    <path d="M320 200 L350 230 A10 10 0 1 1 335 245 L305 215" fill="#54b4d3" />
+    <path d="M305 215 L290 230 A20 20 0 1 1 275 215 L290 200 Z" fill="#54b4d3" />
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#212529">Maintenance en cours</text>
+</svg>

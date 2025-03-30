@@ -57,6 +57,25 @@ Le projet est organisé en plusieurs couches selon les principes de la Clean Arc
 - SQL Server (local ou distant)
 - Visual Studio 2022 ou VS Code
 
+### Configuration rapide (script automatisé)
+
+Pour restaurer rapidement les packages et construire le projet :
+
+1. Clonez le dépôt
+```powershell
+git clone https://github.com/alonguetaptmed/LogCentralPlatform.git
+cd LogCentralPlatform
+```
+
+2. Exécutez le script de build
+```powershell
+.\build.bat
+```
+
+Ce script va automatiquement :
+- Restaurer tous les packages NuGet
+- Compiler la solution
+
 ### Configuration simplifiée (recommandée)
 
 Nous fournissons des scripts pour faciliter la configuration locale:
@@ -205,10 +224,15 @@ Si vous rencontrez des erreurs du type:
 NETSDK1004 Le fichier de composants 'project.assets.json' est introuvable. Exécutez une restauration de package NuGet pour générer ce fichier.
 ```
 
-Utilisez les commandes suivantes:
+Utilisez le script de build fourni :
+```bash
+.\build.bat
+```
+
+Ou manuellement :
 ```bash
 dotnet restore
-dotnet build /p:WarningLevel=0
+dotnet build
 ```
 
 ### Base de données
@@ -240,6 +264,8 @@ Ces scripts généreront un fichier `database_creation_script.sql` que vous pour
 
 - **Erreurs d'ambiguïté de type (par exemple, `LogLevel`)**: Utilisez le nom complet du type, par exemple `LogCentralPlatform.Core.Entities.LogLevel`
 
+- **ViewModels manquants**: Assurez-vous que tous les ViewModels sont correctement définis dans le dossier `src/LogCentralPlatform.Web/ViewModels`. Pour plus d'informations, consultez la [Référence des ViewModels](/docs/development/REFERENCE_VIEWMODELS.md).
+
 - **Implémentations de méthodes manquantes**: Vérifiez que toutes les méthodes définies dans les interfaces sont correctement implémentées
 
 ### Application
@@ -252,6 +278,7 @@ Ces scripts généreront un fichier `database_creation_script.sql` que vous pour
 Une documentation plus détaillée est disponible dans le dossier `/docs`:
 - [Documentation principale](/docs/README.md)
 - [Guide de développement](/docs/development/GUIDE_DEVELOPPEMENT.md)
+- [Référence des ViewModels](/docs/development/REFERENCE_VIEWMODELS.md)
 - [Guide de déploiement](/docs/deployment/GUIDE_DEPLOIEMENT.md)
 - [Guide d'intégration](/docs/integration/GUIDE_INTEGRATION.md)
 

@@ -21,12 +21,12 @@
                         <input type="hidden" asp-for="ReturnUrl" />
                         
                         <div class="mb-4">
-                            <label asp-for="Email" class="form-label">Adresse e-mail</label>
+                            <label asp-for="Username" class="form-label">Nom d'utilisateur</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                <input asp-for="Email" class="form-control" placeholder="nom@domaine.com" autofocus />
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input asp-for="Username" class="form-control" placeholder="utilisateur" autofocus />
                             </div>
-                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <span asp-validation-for="Username" class="text-danger"></span>
                         </div>
                         
                         <div class="mb-4">

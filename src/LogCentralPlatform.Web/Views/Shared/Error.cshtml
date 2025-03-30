@@ -19,22 +19,24 @@
                     
                     @if (Model?.ShowRequestId ?? false)
                     {
-                        <div class="text-muted mb-3">
-                            <p>
-                                <strong>ID de requête:</strong> <code>@Model.RequestId</code>
-                            </p>
+                        <div class="alert alert-light mb-4">
+                            <strong>ID de la requête:</strong> <code>@Model?.RequestId</code>
                         </div>
                     }
                     
-                    @if (Model?.Details != null)
+                    @if (!string.IsNullOrEmpty(Model?.Details))
                     {
-                        <div class="mt-4">
-                            <button class="btn btn-outline-secondary" type="button" id="toggleDetailsBtn">
-                                <i class="bi bi-chevron-down me-1"></i> Afficher les détails techniques
-                            </button>
-                            <div class="mt-3 collapse" id="errorDetails">
-                                <div class="bg-light p-3 rounded text-start">
-                                    <pre class="mb-0"><code>@Model.Details</code></pre>
+                        <div class="accordion mb-4" id="errorDetails">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingDetails">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails">
+                                        Détails de l'erreur
+                                    </button>
+                                </h2>
+                                <div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#errorDetails">
+                                    <div class="accordion-body">
+                                        <pre class="bg-light p-3 text-start rounded">@Model?.Details</pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -46,37 +48,17 @@
                 <a href="/" class="btn btn-primary">
                     <i class="bi bi-house-door me-1"></i> Retour à l'accueil
                 </a>
-                <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
+                <button onclick="window.history.back();" class="btn btn-secondary">
                     <i class="bi bi-arrow-left me-1"></i> Retour à la page précédente
                 </button>
             </div>
             
-            @if (!string.IsNullOrEmpty(Model?.SupportEmail))
-            {
-                <p class="mt-4">
-                    Si le problème persiste, veuillez contacter notre support à l'adresse 
-                    <a href="mailto:@Model.SupportEmail">@Model.SupportEmail</a>
-                </p>
-            }
+            <div class="mt-5">
+                <p class="text-muted small">Si le problème persiste, contactez l'administrateur système.</p>
+                <a href="mailto:support@logcentralplatform.com" class="btn btn-link">
+                    <i class="bi bi-envelope me-1"></i> support@logcentralplatform.com
+                </a>
+            </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        // Toggle pour afficher/masquer les détails techniques
-        document.getElementById('toggleDetailsBtn')?.addEventListener('click', function() {
-            const detailsElement = document.getElementById('errorDetails');
-            if (detailsElement) {
-                const isCollapsed = detailsElement.classList.contains('collapse');
-                if (isCollapsed) {
-                    detailsElement.classList.remove('collapse');
-                    this.innerHTML = '<i class="bi bi-chevron-up me-1"></i> Masquer les détails techniques';
-                } else {
-                    detailsElement.classList.add('collapse');
-                    this.innerHTML = '<i class="bi bi-chevron-down me-1"></i> Afficher les détails techniques';
-                }
-            }
-        });
-    </script>
-}

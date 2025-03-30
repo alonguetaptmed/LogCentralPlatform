@@ -95,9 +95,67 @@ LogCentralPlatform/
 │   │   └── Models/                          # DTOs
 │   └── LogCentralPlatform.Web/              # Interface Web
 │       ├── Controllers/                     # Contrôleurs MVC
-│       ├── Models/                          # ViewModels
+│       ├── ViewModels/                      # ViewModels pour les vues
+│       ├── Models/                          # Autres modèles
 │       └── Views/                           # Vues Razor
 └── docs/                                    # Documentation
+```
+
+## ViewModels
+
+Les ViewModels sont utilisés pour transmettre les données des contrôleurs aux vues. Ils sont organisés dans le dossier `src/LogCentralPlatform.Web/ViewModels/`.
+
+### Types de ViewModels
+
+1. **Modèles d'affichage**
+   - `ClientListViewModel`, `ServiceListViewModel` : Pour les pages de liste
+   - `ClientDetailsViewModel`, `ServiceDetailsViewModel` : Pour les pages de détail
+
+2. **Modèles de formulaire**
+   - `LoginViewModel` : Pour l'authentification
+   - `SettingsViewModel` : Pour la configuration de l'application
+
+3. **Modèles partagés**
+   - `AlertViewModel` : Pour les messages d'alerte
+   - `StatCardViewModel` : Pour les cartes de statistiques
+   - `PaginationViewModel` : Pour la pagination
+
+### Conventions pour les ViewModels
+
+- Utilisez les annotations de validation pour les propriétés des formulaires
+- Regroupez les ViewModels liés dans des fichiers logiques (ex: `ClientViewModels.cs`)
+- Utilisez des classes imbriquées pour les petits modèles auxiliaires
+- Assurez-vous d'initialiser les collections (ex: `= new List<T>()`)
+
+### Exemple d'utilisation
+
+```csharp
+// Dans le contrôleur
+public IActionResult Details(int id)
+{
+    var client = _clientService.GetClientById(id);
+    
+    var viewModel = new ClientDetailsViewModel
+    {
+        Id = client.Id,
+        Name = client.Name,
+        // ... autres propriétés
+        Services = client.Services.Select(s => new ServiceSummary
+        {
+            Id = s.Id,
+            Name = s.Name,
+            // ... autres propriétés
+        }).ToList()
+    };
+    
+    return View(viewModel);
+}
+
+// Dans la vue (Razor)
+@model LogCentralPlatform.Web.ViewModels.ClientDetailsViewModel
+
+<h1>@Model.Name</h1>
+// ... reste de la vue
 ```
 
 ## Conventions de codage
@@ -235,6 +293,9 @@ dotnet ef database update
 
 **Problème** : Version .NET incorrecte
 **Solution** : Vérifiez que vous utilisez .NET 8.0 avec `dotnet --version`
+
+**Problème** : ViewModels manquants
+**Solution** : Assurez-vous que tous les ViewModels référencés dans les vues sont correctement définis dans le dossier `src/LogCentralPlatform.Web/ViewModels/`
 
 ## Contacts
 

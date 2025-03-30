@@ -8,14 +8,14 @@
         <div class="col-md-8">
             <div class="d-flex align-items-center justify-content-center mb-4">
                 <i class="bi bi-exclamation-triangle text-danger" style="font-size: 5rem;"></i>
-                <h1 class="ms-3 mb-0 text-danger display-4">@(Model?.StatusCode ?? 500)</h1>
+                <h1 class="ms-3 mb-0 text-danger display-4">@(Model?.ErrorCode ?? "500")</h1>
             </div>
             
-            <h2 class="mb-4">@(Model?.Title ?? "Une erreur s'est produite")</h2>
+            <h2 class="mb-4">Une erreur s'est produite</h2>
             
             <div class="card mb-4">
                 <div class="card-body py-4">
-                    <p class="lead mb-4">@(Model?.Message ?? "Une erreur inattendue s'est produite lors du traitement de votre demande.")</p>
+                    <p class="lead mb-4">@(Model?.ErrorMessage ?? "Une erreur inattendue s'est produite lors du traitement de votre demande.")</p>
                     
                     @if (Model?.ShowRequestId ?? false)
                     {
@@ -24,7 +24,7 @@
                         </div>
                     }
                     
-                    @if (!string.IsNullOrEmpty(Model?.Details))
+                    @if (Model?.ShowStackTrace ?? false && !string.IsNullOrEmpty(Model?.StackTrace))
                     {
                         <div class="accordion mb-4" id="errorDetails">
                             <div class="accordion-item">
@@ -35,7 +35,7 @@
                                 </h2>
                                 <div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#errorDetails">
                                     <div class="accordion-body">
-                                        <pre class="bg-light p-3 text-start rounded">@Model?.Details</pre>
+                                        <pre class="bg-light p-3 text-start rounded">@Model?.StackTrace</pre>
                                     </div>
                                 </div>
                             </div>

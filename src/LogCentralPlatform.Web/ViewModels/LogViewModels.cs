@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using LogCentralPlatform.Core.Entities;
 
 namespace LogCentralPlatform.Web.ViewModels
 {
@@ -24,6 +25,24 @@ namespace LogCentralPlatform.Web.ViewModels
         public List<string> AvailableLevels { get; set; } = new List<string>();
         public List<string> AvailableServices { get; set; } = new List<string>();
         public List<string> AvailableClients { get; set; } = new List<string>();
+        
+        // Propriétés supplémentaires présentes dans la vue
+        public string SearchText { get; set; }
+        public string ServiceIdFilter { get; set; }
+        public string ClientIdFilter { get; set; }
+        public int CurrentPage { get; set; } = 1;
+        public bool HasPreviousPage => CurrentPage > 1;
+        public bool HasNextPage => CurrentPage < TotalPages;
+        public int TotalCount => TotalLogs;
+    }
+
+    public class LogEntrySummary
+    {
+        public int Id { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string Level { get; set; }
+        public string Message { get; set; }
+        public string Context { get; set; }
     }
 
     public class LogEntryViewModel
@@ -31,8 +50,8 @@ namespace LogCentralPlatform.Web.ViewModels
         public int Id { get; set; }
         public DateTime Timestamp { get; set; }
         public string FormattedTimestamp => Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff");
-        public string Level { get; set; }
-        public string LevelClass => GetLevelClass(Level);
+        public LogLevel Level { get; set; }
+        public string LevelClass => GetLevelClass(Level.ToString());
         public string Message { get; set; }
         public string Category { get; set; }
         public string StackTrace { get; set; }
@@ -47,6 +66,13 @@ namespace LogCentralPlatform.Web.ViewModels
         public string UserId { get; set; }
         public List<LogAnalysisResultViewModel> AnalysisResults { get; set; } = new List<LogAnalysisResultViewModel>();
         public List<LogEntrySummary> RelatedLogs { get; set; } = new List<LogEntrySummary>();
+        
+        // Propriétés additionnelles pour la vue
+        public string Environment { get; set; }
+        public DateTime ReceivedAt { get; set; } = DateTime.Now;
+        public bool AnalyzedByAI { get; set; }
+        public string AIAnalysisResult { get; set; }
+        public string ExceptionDetails { get; set; }
 
         private string GetLevelClass(string level)
         {

@@ -1,26 +1,82 @@
-@model LogCentralPlatform.Web.Models.ErrorViewModel
+@model ErrorViewModel
 @{
     ViewData["Title"] = "Erreur";
 }
 
-<h1 class="text-danger">Erreur.</h1>
-<h2 class="text-danger">Une erreur s'est produite lors du traitement de votre demande.</h2>
+<div class="container py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex align-items-center justify-content-center mb-4">
+                <i class="bi bi-exclamation-triangle text-danger" style="font-size: 5rem;"></i>
+                <h1 class="ms-3 mb-0 text-danger display-4">@(Model?.StatusCode ?? 500)</h1>
+            </div>
+            
+            <h2 class="mb-4">@(Model?.Title ?? "Une erreur s'est produite")</h2>
+            
+            <div class="card mb-4">
+                <div class="card-body py-4">
+                    <p class="lead mb-4">@(Model?.Message ?? "Une erreur inattendue s'est produite lors du traitement de votre demande.")</p>
+                    
+                    @if (Model?.ShowRequestId ?? false)
+                    {
+                        <div class="text-muted mb-3">
+                            <p>
+                                <strong>ID de requête:</strong> <code>@Model.RequestId</code>
+                            </p>
+                        </div>
+                    }
+                    
+                    @if (Model?.Details != null)
+                    {
+                        <div class="mt-4">
+                            <button class="btn btn-outline-secondary" type="button" id="toggleDetailsBtn">
+                                <i class="bi bi-chevron-down me-1"></i> Afficher les détails techniques
+                            </button>
+                            <div class="mt-3 collapse" id="errorDetails">
+                                <div class="bg-light p-3 rounded text-start">
+                                    <pre class="mb-0"><code>@Model.Details</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/" class="btn btn-primary">
+                    <i class="bi bi-house-door me-1"></i> Retour à l'accueil
+                </a>
+                <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
+                    <i class="bi bi-arrow-left me-1"></i> Retour à la page précédente
+                </button>
+            </div>
+            
+            @if (!string.IsNullOrEmpty(Model?.SupportEmail))
+            {
+                <p class="mt-4">
+                    Si le problème persiste, veuillez contacter notre support à l'adresse 
+                    <a href="mailto:@Model.SupportEmail">@Model.SupportEmail</a>
+                </p>
+            }
+        </div>
+    </div>
+</div>
 
-@if (Model?.ShowRequestId ?? false)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
+@section Scripts {
+    <script>
+        // Toggle pour afficher/masquer les détails techniques
+        document.getElementById('toggleDetailsBtn')?.addEventListener('click', function() {
+            const detailsElement = document.getElementById('errorDetails');
+            if (detailsElement) {
+                const isCollapsed = detailsElement.classList.contains('collapse');
+                if (isCollapsed) {
+                    detailsElement.classList.remove('collapse');
+                    this.innerHTML = '<i class="bi bi-chevron-up me-1"></i> Masquer les détails techniques';
+                } else {
+                    detailsElement.classList.add('collapse');
+                    this.innerHTML = '<i class="bi bi-chevron-down me-1"></i> Afficher les détails techniques';
+                }
+            }
+        });
+    </script>
 }
-
-<h3>Mode développement</h3>
-<p>
-    En modifiant l'environnement à <strong>Development</strong> dans le fichier <strong>appsettings.json</strong>, vous verrez des informations de débogage détaillées.
-</p>
-<p>
-    <strong>L'environnement de développement ne doit pas être activé pour les applications déployées.</strong>
-    Cela pourrait entraîner l'affichage d'informations sensibles auprès des utilisateurs finaux.
-    Pour le débogage local, définissez l'environnement sur <strong>Development</strong>
-    en définissant la variable d'environnement <strong>ASPNETCORE_ENVIRONMENT</strong> sur <strong>Development</strong>
-    et redémarrez l'application.
-</p>

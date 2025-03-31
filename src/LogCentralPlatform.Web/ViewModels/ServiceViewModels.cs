@@ -17,6 +17,16 @@ namespace LogCentralPlatform.Web.ViewModels
         public string SearchTerm { get; set; }
         public string ClientFilter { get; set; }
         public string StatusFilter { get; set; }
+        
+        // Propriétés supplémentaires requises par les vues
+        public int CurrentPage { get; set; } = 1;
+        public bool HasPreviousPage => CurrentPage > 1;
+        public bool HasNextPage => CurrentPage < TotalPages;
+        public int TotalCount => TotalServices;
+        public string SearchText { get; set; }
+        public string Status { get; set; }
+        public int ClientId { get; set; }
+        public List<ClientSummary> Clients { get; set; } = new List<ClientSummary>();
     }
 
     public class ServiceSummary
@@ -30,6 +40,11 @@ namespace LogCentralPlatform.Web.ViewModels
         public string Status { get; set; }
         public int ErrorCount24h { get; set; }
         public string ApiKey { get; set; }
+        
+        // Propriétés supplémentaires requises par les vues
+        public string Description { get; set; }
+        public string Environment { get; set; }
+        public DateTime LastActivity { get; set; }
     }
 
     public class ServiceDetailsViewModel
@@ -72,6 +87,15 @@ namespace LogCentralPlatform.Web.ViewModels
         public List<LogSummaryViewModel> RecentLogs { get; set; } = new List<LogSummaryViewModel>();
         
         public ServiceStatsViewModel Stats { get; set; } = new ServiceStatsViewModel();
+        
+        // Propriétés supplémentaires requises par les vues
+        public string Environment { get; set; }
+        public int MonitoringInterval { get; set; }
+        public bool EnableAIAnalysis { get; set; }
+        public int LogCount { get; set; }
+        public int ErrorCount { get; set; }
+        public double UptimePercentage { get; set; }
+        public List<AlertViewModel> Alerts { get; set; } = new List<AlertViewModel>();
     }
 
     public class LogSummaryViewModel

@@ -7,7 +7,7 @@ namespace LogCentralPlatform.Web.ViewModels
 {
     public class LogListViewModel
     {
-        public List<LogEntrySummary> Logs { get; set; } = new List<LogEntrySummary>();
+        public List<LogSummaryViewModel> Logs { get; set; } = new List<LogSummaryViewModel>();
         public int TotalLogs { get; set; }
         public int ErrorCount { get; set; }
         public int WarningCount { get; set; }
@@ -36,15 +36,6 @@ namespace LogCentralPlatform.Web.ViewModels
         public int TotalCount => TotalLogs;
     }
 
-    public class LogEntrySummary
-    {
-        public int Id { get; set; }
-        public DateTime Timestamp { get; set; }
-        public string Level { get; set; }
-        public string Message { get; set; }
-        public string Context { get; set; }
-    }
-
     public class LogEntryViewModel
     {
         public int Id { get; set; }
@@ -65,7 +56,7 @@ namespace LogCentralPlatform.Web.ViewModels
         public string RequestId { get; set; }
         public string UserId { get; set; }
         public List<LogAnalysisResultViewModel> AnalysisResults { get; set; } = new List<LogAnalysisResultViewModel>();
-        public List<LogEntrySummary> RelatedLogs { get; set; } = new List<LogEntrySummary>();
+        public List<LogSummaryViewModel> RelatedLogs { get; set; } = new List<LogSummaryViewModel>();
         
         // Propriétés additionnelles pour la vue
         public string Environment { get; set; }

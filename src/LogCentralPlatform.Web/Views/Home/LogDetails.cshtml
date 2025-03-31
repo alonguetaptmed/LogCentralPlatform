@@ -1,8 +1,9 @@
 @model LogEntryViewModel
+@using LogCentralPlatform.Core.Entities
 @{
     ViewData["Title"] = "Détails du log";
     
-    string GetHeaderClass(LogLevel level)
+    string GetHeaderClass(LogCentralPlatform.Core.Entities.LogLevel level)
     {
         return level.ToString()?.ToLower() switch
         {
@@ -13,7 +14,7 @@
         };
     }
     
-    string GetLevelIcon(LogLevel level)
+    string GetLevelIcon(LogCentralPlatform.Core.Entities.LogLevel level)
     {
         return level.ToString()?.ToLower() switch
         {

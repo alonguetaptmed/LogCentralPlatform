@@ -69,12 +69,12 @@ namespace LogCentralPlatform.Web.ViewModels
         
         public DateTime CreatedAt { get; set; }
         
-        public List<LogEntrySummary> RecentLogs { get; set; } = new List<LogEntrySummary>();
+        public List<LogSummaryViewModel> RecentLogs { get; set; } = new List<LogSummaryViewModel>();
         
         public ServiceStatsViewModel Stats { get; set; } = new ServiceStatsViewModel();
     }
 
-    public class LogEntrySummary
+    public class LogSummaryViewModel
     {
         public int Id { get; set; }
         public DateTime Timestamp { get; set; }

@@ -35,7 +35,7 @@ namespace LogCentralPlatform.Web.ViewModels
         public List<StatCardViewModel> Stats { get; set; } = new List<StatCardViewModel>();
         public List<AlertViewModel> Alerts { get; set; } = new List<AlertViewModel>();
         public List<ServiceSummary> RecentlyOfflineServices { get; set; } = new List<ServiceSummary>();
-        public List<LogEntrySummary> RecentErrors { get; set; } = new List<LogEntrySummary>();
+        public List<LogSummaryViewModel> RecentErrors { get; set; } = new List<LogSummaryViewModel>();
         public Dictionary<string, int> LogLevelDistribution { get; set; } = new Dictionary<string, int>();
         public Dictionary<DateTime, int> LogsTimeline { get; set; } = new Dictionary<DateTime, int>();
     }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using LogCentralPlatform.Core.Entities;
+using LogLevel = LogCentralPlatform.Core.Entities.LogLevel;
 
 namespace LogCentralPlatform.Web.ViewModels
 {
